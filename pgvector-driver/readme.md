@@ -3,6 +3,7 @@
 ## Try it out using docker
 ```
 docker build . -t pgvector-driver:latest
+docker run pgvector-latest:latest
 ```
 
 ## Use with naviserver

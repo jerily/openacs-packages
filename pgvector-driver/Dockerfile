@@ -16,6 +16,7 @@ RUN apt update && apt install -y \
     libxslt1-dev \
     zlib1g-dev \
     cmake \
+    cvs \
     git \
     vim \
     curl \
@@ -46,22 +47,17 @@ RUN cd /usr/local/src && \
     git clone https://github.com/gustafn/install-ns && \
     cd install-ns && \
     bash install-ns.sh && \
-    bash install-ns.sh build
-
-RUN echo "14 main postgres" > ~/.postgresqlrc && \
-    ls -la ~/.postgresqlrc 
-
-RUN cd /usr/local/src && \
-    cd install-ns && \
-    bash install-oacs.sh && \
+    bash install-ns.sh build && \
     /etc/init.d/postgresql start && \
     pg_lsclusters && \ 
+    bash install-oacs.sh && \
     bash install-oacs.sh build
 
 RUN cd /var/www/oacs-5-10-0/ && \
     git clone https://github.com/jerily/openacs-packages.git && \
-    mv openacs-packages/pgvector-driver packages && \
-    patch -p0 /usr/local/ns/config-oacs-5-10-0.tcl /var/www/oacs-5-10-0/packages/pgvector-driver/config.patch
+    ls -la && \
+    mv openacs-packages/pgvector-driver ./openacs-4/packages/ && \
+    patch -p0 /usr/local/ns/config-oacs-5-10-0.tcl ./openacs-4/packages/pgvector-driver/config.patch
 
 RUN git clone --recurse-submodules https://github.com/jerily/tbert.git
 
@@ -78,7 +74,7 @@ RUN cd tbert && \
     cp -R all-MiniLM-L12-v2 /var/www/oacs-5-10-0/models
 
 RUN cd tbert && mkdir build && cd build && \
-    cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release && \
+    cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DNAVISERVER=/usr/local/ns && \
     make && \
     make install
 
