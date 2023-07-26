@@ -52,7 +52,7 @@ ad_proc -public pgvector::index {
           select o.object_id, :embedding
           from acs_objects o
           where object_id = :object_id
-           and not exists (select 1 from pgvector_txt
+           and not exists (select 1 from txt
                             where object_id = o.object_id)
     	}
     } else {
@@ -75,7 +75,7 @@ ad_proc -public pgvector::unindex {
 
     @return nothing
 } {
-    db_dml unindex "delete from pgvector_txt where object_id=:object_id"
+    db_dml unindex "delete from txt where object_id=:object_id"
 }
 
 ad_proc -deprecated pgvector::update_index args {
