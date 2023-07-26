@@ -76,10 +76,13 @@ RUN cd tbert && \
 RUN cd tbert && mkdir build && cd build && \
     cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DNAVISERVER=/usr/local/ns && \
     make && \
-    make install
+    make install && \
+    chmod 775 /usr/local/ns/lib/libtbert.so && \
+    chown nsadmin:nsadmin /usr/local/ns/lib/libtbert.so
+
+ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 
 EXPOSE 8000
 STOPSIGNAL SIGQUIT
 
-CMD ["/etc/init.d/postgresql", "start"]
-CMD ["/usr/local/ns/bin/nsd", "-f", "-t", "/usr/local/ns/config-oacs-5-10-0.tcl", "-u", "nsadmin", "-g", "nsadmin"]
+CMD bash -c "/etc/init.d/postgresql start && /usr/local/ns/bin/nsd -f -t /usr/local/ns/config-oacs-5-10-0.tcl -u nsadmin -g nsadmin"
