@@ -1,1 +1,2 @@
 pgvector-driver
+pgembedding-driver
