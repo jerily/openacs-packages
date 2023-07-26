@@ -80,6 +80,16 @@ RUN cd tbert && mkdir build && cd build && \
     chmod 775 /usr/local/ns/lib/libtbert.so && \
     chown nsadmin:nsadmin /usr/local/ns/lib/libtbert.so
 
+RUN git clone --branch v0.4.4 https://github.com/pgvector/pgvector.git && \
+    cd pgvector && \
+    make && \
+    make install
+
+RUN wget -O oacs-5-10-0.pg_dump.gz "https://openacs.org/storage/download/oacs-5-10-0.pg_dump.gz?file_id=5741618" && \
+    gunzip oacs-5-10-0.pg_dump.gz && \
+    /etc/init.d/postgresql start && \
+    su postgres -c 'psql -f oacs-5-10-0.pg_dump oacs-5-10-0'
+
 ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 
 EXPOSE 8000
