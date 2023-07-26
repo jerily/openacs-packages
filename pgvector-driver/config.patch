@@ -1,0 +1,4 @@
+999a1000,1002
+> 
+>     set libtbert [lindex [lsort [glob -nocomplain $homedir/lib/libtbert*[info sharedlibextension]]] end]
+>     ns_param libtbert $libtbert
