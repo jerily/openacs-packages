@@ -90,7 +90,7 @@ RUN git clone --branch v0.4.4 https://github.com/pgvector/pgvector.git && \
 
 RUN git clone https://github.com/neondatabase/pg_embedding.git && \
     cd pg_embedding && \
-    patch -p0 /var/www/oacs-5-10-0/packages/pgembedding-driver/pg_embedding.patch . && \
+    git apply ~/repos-jerily/openacs-packages/pgembedding-driver/pg_embedding.patch && \
     make && \
     make install  
 
