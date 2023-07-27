@@ -1,0 +1,63 @@
+? www/resources/bootstrap-treeview
+? www/resources/xowiki-bootstrap3.css
+? www/resources/xowiki-bootstrap5.css
+? www/resources/xowiki-yui.css
+Index: tcl/xowiki-sc-procs.tcl
+===================================================================
+RCS file: /cvsroot/openacs-4/packages/xowiki/tcl/xowiki-sc-procs.tcl,v
+retrieving revision 1.50.2.1
+diff -u -r1.50.2.1 xowiki-sc-procs.tcl
+--- tcl/xowiki-sc-procs.tcl	27 Feb 2019 11:18:04 -0000	1.50.2.1
++++ tcl/xowiki-sc-procs.tcl	27 Jul 2023 10:22:50 -0000
+@@ -13,10 +13,10 @@
+ 
+   returns a datasource for the search package
+ } {
+-  #ns_log notice "--sc ::xowiki::datasource called with revision_id = $revision_id"
++  ns_log notice "--sc ::xowiki::datasource called with revision_id = $revision_id"
+   set page [::xowiki::Package instantiate_page_from_id -revision_id $revision_id -user_id 0]
+ 
+-  #ns_log notice "--sc ::xowiki::datasource $page [$page set publish_status]"
++  ns_log notice "--sc ::xowiki::datasource $page [$page set publish_status]"
+ 
+   if {[$page set publish_status] in {production expired}} {
+     #
+@@ -28,7 +28,7 @@
+                 storage_type text mime text/html]
+   }
+ 
+-  #ns_log notice "--sc setting absolute links for page = $page [$page set name]"
++  ns_log notice "--sc setting absolute links for page = $page [$page set name]"
+ 
+   set d [dict merge \
+              {mime text/html text "" html "" keywords ""} \
+@@ -87,7 +87,7 @@
+     }
+   }
+ 
+-  #ns_log notice "--sc INDEXING $revision_id -> $text keywords [dict get $d keywords]"
++  ns_log notice "--sc INDEXING $revision_id -> $text keywords [dict get $d keywords]"
+ 
+   #
+   # cleanup old stuff. This might run into an error, when search is not
+@@ -102,6 +102,20 @@
+            where item_id = :item_id and revision_id != :revision_id)
+     }
+   }
++  if {[::xo::db::require exists_table pgvector_txt]} {
++    ::xo::dc dml delete_old_revisions_from_pgvector_txt {
++      delete from pgvector_txt where object_id in \
++          (select revision_id from cr_revisions
++           where item_id = :item_id and revision_id != :revision_id)
++    }
++  }
++  if {[::xo::db::require exists_table pgembedding_txt]} {
++    ::xo::dc dml delete_old_revisions_from_pgembedding_txt {
++      delete from pgembedding_txt where object_id in \
++          (select revision_id from cr_revisions
++           where item_id = :item_id and revision_id != :revision_id)
++    }
++  }
+ 
+   set pubDate [::xo::db::tcl_date [$page set publish_date] tz]
+   set link [$page detail_link]
