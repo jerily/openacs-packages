@@ -7,22 +7,6 @@ ad_library {
 
 namespace eval pgvector {}
 
-ad_proc -private pgvector::trunc_to_max {txt} {
-    ensure we do not exceed the vector size
-} {
-    set vector_size [parameter::get \
-                               -package_id [apm_package_id_from_key pgvector-driver] \
-                               -parameter vector_size \
-                               -default 384]
-    if {$vector_size == 0} {
-        set max_size_to_index 384
-    }
-    if {$vector_size > 0 && [string length $txt] > $vector_size} {
-        ns_log notice "pgvector: truncate overlong string to $vector_size words"
-        set txt [join [lrange [split $txt " "] 0 $vector_size-1] " "]
-    }
-    return $txt
-}
 
 ad_proc -public pgvector::index {
     object_id
@@ -41,23 +25,22 @@ ad_proc -public pgvector::index {
 
     @return nothing
 } {
-    #set txt [pgvector::trunc_to_max "$title $txt"]
     #ns_log notice "txt for embedding=$txt"
     set embedding "\[[join [::tbert::ev mymodel $title] ","]\]"
     #ns_log notice embedding=$embedding
-    set exists_p [db_0or1row exists_row "select 1 from txt where object_id = :object_id"]
+    set exists_p [db_0or1row exists_row "select 1 from pgvector_txt where object_id = :object_id"]
     if { !$exists_p } {
     	db_dml insert_index {
-        insert into txt (object_id, embedding)
+        insert into pgvector_txt (object_id, embedding)
           select o.object_id, :embedding
           from acs_objects o
           where object_id = :object_id
-           and not exists (select 1 from txt
+           and not exists (select 1 from pgvector_txt
                             where object_id = o.object_id)
     	}
     } else {
       db_dml update_index {
-          update txt set
+          update pgvector_txt set
           embedding = :embedding
           where object_id = :object_id
       }
@@ -75,7 +58,7 @@ ad_proc -public pgvector::unindex {
 
     @return nothing
 } {
-    db_dml unindex "delete from txt where object_id=:object_id"
+    db_dml unindex "delete from pgvector_txt where object_id=:object_id"
 }
 
 ad_proc -deprecated pgvector::update_index args {
@@ -172,10 +155,10 @@ ad_proc -callback search::search -impl pgvector-driver {
         lappend where_clauses "o.package_id in ([ns_dbquotelist $ids])"
     }
     if {$need_acs_objects} {
-        lappend from_clauses "txt" "acs_objects o"
+        lappend from_clauses "pgvector_txt txt" "acs_objects o"
         lappend where_clauses "o.object_id = txt.object_id"
     } else {
-        lappend from_clauses "txt"
+        lappend from_clauses "pgvector_txt txt"
     }
 
 

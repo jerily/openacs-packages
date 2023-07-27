@@ -1,1 +1,1 @@
-drop table txt;
+drop table pgvector_txt;

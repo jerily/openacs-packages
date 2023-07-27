@@ -26,19 +26,19 @@ ad_proc -public pgembedding::index {
 } {
     set embedding "\{[join [::tbert::ev mymodel $title] ","]\}"
     #ns_log notice embedding=$embedding
-    set exists_p [db_0or1row exists_row "select 1 from txt where object_id = :object_id"]
+    set exists_p [db_0or1row exists_row "select 1 from pgembedding_txt where object_id = :object_id"]
     if { !$exists_p } {
     	db_dml insert_index {
-        insert into txt (object_id, embedding)
+        insert into pgembedding_txt (object_id, embedding)
           select o.object_id, :embedding
           from acs_objects o
           where object_id = :object_id
-           and not exists (select 1 from txt
+           and not exists (select 1 from pgembedding_txt
                             where object_id = o.object_id)
     	}
     } else {
       db_dml update_index {
-          update txt set
+          update pgembedding_txt set
           embedding = :embedding
           where object_id = :object_id
       }
@@ -56,7 +56,7 @@ ad_proc -public pgembedding::unindex {
 
     @return nothing
 } {
-    db_dml unindex "delete from txt where object_id=:object_id"
+    db_dml unindex "delete from pgembedding_txt where object_id=:object_id"
 }
 
 ad_proc -deprecated pgembedding::update_index args {
@@ -153,10 +153,10 @@ ad_proc -callback search::search -impl pgembedding-driver {
         lappend where_clauses "o.package_id in ([ns_dbquotelist $ids])"
     }
     if {$need_acs_objects} {
-        lappend from_clauses "txt" "acs_objects o"
+        lappend from_clauses "pgembedding_txt txt" "acs_objects o"
         lappend where_clauses "o.object_id = txt.object_id"
     } else {
-        lappend from_clauses "txt"
+        lappend from_clauses "pgembedding_txt txt"
     }
 
 
