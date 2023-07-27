@@ -1,5 +1,7 @@
 # pgvector-driver
 
+![Sample Screenshot - Related Searches in OpenACS](relative-searches-screenshot-1.png "Sample Screenshot")
+
 ## Install pgvector
 ```
 git clone --branch v0.4.4 https://github.com/pgvector/pgvector.git
