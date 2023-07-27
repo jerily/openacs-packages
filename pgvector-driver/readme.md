@@ -1,6 +1,7 @@
 # pgvector-driver
 
-![Sample Screenshot - Related Searches in OpenACS](related-searches-screenshot-1.png "Sample Screenshot")
+![Sample Screenshot - Related Searches in OpenACS with PostgreSQL FTS results](related-searches-screenshot-1.png "Sample Screenshot - Related Searches when PostgreSQL FTS found matching records")
+![Sample Screenshot - Related Searches in OpenACS without results from PostgreSQL FTS](related-searches-screenshot-2.png "Sample Screenshot - Related Searches when PostgreSQL FTS did NOT find matching records")
 
 ## Install pgvector
 ```
