@@ -57,7 +57,10 @@ RUN cd /var/www/oacs-5-10-0/ && \
     git clone https://github.com/jerily/openacs-packages.git && \
     ls -la && \
     mv openacs-packages/pgvector-driver ./openacs-4/packages/ && \
-    patch -p0 /usr/local/ns/config-oacs-5-10-0.tcl ./openacs-4/packages/pgvector-driver/config.patch
+    patch -p0 /usr/local/ns/config-oacs-5-10-0.tcl ./openacs-4/packages/pgvector-driver/config.patch && \
+    mv openacs-packages/pgembedding-driver ./openacs-4/packages/ && \
+    cd openacs-4/packages/search && \
+    patch -p0 ../../openacs-packages/search.patch
 
 RUN git clone --recurse-submodules https://github.com/jerily/tbert.git
 
@@ -84,6 +87,12 @@ RUN git clone --branch v0.4.4 https://github.com/pgvector/pgvector.git && \
     cd pgvector && \
     make && \
     make install
+
+RUN git clone https://github.com/neondatabase/pg_embedding.git && \
+    cd pg_embedding && \
+    patch -p0 /var/www/oacs-5-10-0/packages/pgembedding-driver/pg_embedding.patch && \
+    make && \
+    make install  
 
 RUN wget -O oacs-5-10-0.pg_dump.gz "https://openacs.org/storage/download/oacs-5-10-0.pg_dump.gz?file_id=5741618" && \
     gunzip oacs-5-10-0.pg_dump.gz && \
