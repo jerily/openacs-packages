@@ -1,6 +1,6 @@
 # pgvector-driver
 
-![Sample Screenshot - Related Searches in OpenACS](relative-searches-screenshot-1.png "Sample Screenshot")
+![Sample Screenshot - Related Searches in OpenACS](related-searches-screenshot-1.png "Sample Screenshot")
 
 ## Install pgvector
 ```
