@@ -66,7 +66,7 @@ RUN cd /var/www/oacs-5-10-0/ && \
     cd ../xowiki && \
     patch -p0 < ../../../openacs-packages/xowiki.patch
 
-RUN echo hi
+RUN echo hello
 
 RUN git clone --recurse-submodules https://github.com/jerily/tbert.git
 
