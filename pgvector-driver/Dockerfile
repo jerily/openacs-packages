@@ -66,6 +66,8 @@ RUN cd /var/www/oacs-5-10-0/ && \
     cd ../xowiki && \
     patch -p0 < ../../../openacs-packages/xowiki.patch
 
+RUN echo hi
+
 RUN git clone --recurse-submodules https://github.com/jerily/tbert.git
 
 RUN cd tbert && \
@@ -88,8 +90,7 @@ RUN cd tbert && mkdir build && cd build && \
     make && \
     make install && \
     chmod 775 /usr/local/ns/bin/libtbert.so && \
-    chown nsadmin:nsadmin /usr/local/ns/bin/libtbert.so && \
-    echo done
+    chown nsadmin:nsadmin /usr/local/ns/bin/libtbert.so
 
 RUN git clone --recurse-submodules https://github.com/jerily/tmfa.git && \
     cd tmfa && mkdir build && cd build && \
