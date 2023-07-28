@@ -16,6 +16,7 @@ RUN apt update && apt install -y \
     libxslt1-dev \
     zlib1g-dev \
     libgcrypt-dev \
+    pkg-config \
     cmake \
     cvs \
     git \
@@ -88,8 +89,6 @@ RUN cd tbert && mkdir build && cd build && \
     make install && \
     chmod 775 /usr/local/ns/bin/libtbert.so && \
     chown nsadmin:nsadmin /usr/local/ns/bin/libtbert.so
-
-RUN apt install -y pkg-config
 
 RUN git clone --recurse-submodules https://github.com/jerily/tmfa.git && \
     cd tmfa && mkdir build && cd build && \
