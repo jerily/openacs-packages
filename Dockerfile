@@ -88,7 +88,8 @@ RUN cd tbert && mkdir build && cd build && \
     make && \
     make install && \
     chmod 775 /usr/local/ns/bin/libtbert.so && \
-    chown nsadmin:nsadmin /usr/local/ns/bin/libtbert.so
+    chown nsadmin:nsadmin /usr/local/ns/bin/libtbert.so && \
+    echo done
 
 RUN git clone --recurse-submodules https://github.com/jerily/tmfa.git && \
     cd tmfa && mkdir build && cd build && \
