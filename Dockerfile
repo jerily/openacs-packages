@@ -15,6 +15,7 @@ RUN apt update && apt install -y \
     libxml2-dev \
     libxslt1-dev \
     zlib1g-dev \
+    libgcrypt-dev \
     cmake \
     cvs \
     git \
