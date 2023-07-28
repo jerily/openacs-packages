@@ -2,7 +2,20 @@ pgvector-driver
 pgembedding-driver
 sample-2fa
 
-# Installation Instuctions
+## Try them out with docker
+```
+git clone https://github.com/jerily/openacs-packages.git
+cd openacs-packages
+docker build . -t neo-openacs-packages:latest
+docker run --network host neo-openacs-packages:latest
+
+#Once you run the last command, you can point your browser to http://localhost:8000/ and login with the following credentials:
+
+email: test at example dot com
+password: test
+```
+ 
+## Installation Instuctions
 ```
 # install vector embeddings naviserver module (BERT models)
 git clone --recurse-submodules https://github.com/jerily/tbert.git
