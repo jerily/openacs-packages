@@ -84,7 +84,7 @@ RUN cd tbert && mkdir build && cd build && \
     make install && \
     cd .. && \
     make && \
-    make install \
+    make install && \
     chmod 775 /usr/local/ns/bin/libtbert.so && \
     chown nsadmin:nsadmin /usr/local/ns/bin/libtbert.so
 
