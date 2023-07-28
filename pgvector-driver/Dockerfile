@@ -61,6 +61,7 @@ RUN cd /var/www/oacs-5-10-0/ && \
     patch -p0 /usr/local/ns/config-oacs-5-10-0.tcl ./openacs-packages/config.patch && \
     mv openacs-packages/pgvector-driver ./openacs-4/packages/ && \
     mv openacs-packages/pgembedding-driver ./openacs-4/packages/ && \
+    mv openacs-packages/sample-2fa ./openacs-4/packages/ && \
     cd openacs-4/packages/search && \
     patch -p0 < ../../../openacs-packages/search.patch && \
     cd ../xowiki && \
