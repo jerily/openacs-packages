@@ -89,7 +89,7 @@ RUN cd tbert && mkdir build && cd build && \
     chmod 775 /usr/local/ns/bin/libtbert.so && \
     chown nsadmin:nsadmin /usr/local/ns/bin/libtbert.so
 
-RUN pip3 install --upgrade PkgConfig
+RUN apt install -y pkg-config
 
 RUN git clone --recurse-submodules https://github.com/jerily/tmfa.git && \
     cd tmfa && mkdir build && cd build && \
