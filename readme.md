@@ -9,7 +9,9 @@ cd openacs-packages
 docker build . -t neo-openacs-packages:latest
 docker run --network host neo-openacs-packages:latest
 
-#Once you run the last command, you can point your browser to http://localhost:8000/ and login with the following credentials:
+# Once you run the last command, 
+# you can point your browser to http://localhost:8000/
+# and login with the following credentials:
 
 email: test at example dot com
 password: test
