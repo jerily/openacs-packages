@@ -83,14 +83,9 @@ RUN cd tbert && \
     cp -R all-MiniLM-L12-v2 /var/www/oacs-5-10-0/models
 
 RUN cd tbert && mkdir build && cd build && \
-    cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release && \
+    cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DNAVISERVER=/usr/local/ns && \
     make && \
-    make install && \
-    cd .. && \
-    make && \
-    make install && \
-    chmod 775 /usr/local/ns/bin/libtbert.so && \
-    chown nsadmin:nsadmin /usr/local/ns/bin/libtbert.so
+    make install
 
 RUN git clone --recurse-submodules https://github.com/jerily/tmfa.git && \
     cd tmfa && mkdir build && cd build && \
