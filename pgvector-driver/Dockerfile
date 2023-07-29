@@ -27,6 +27,7 @@ RUN apt update && apt install -y \
     libgeos-dev \
     libgif-dev \
     libfreetype-dev \
+    swig \
     cmake \
     cvs \
     git \

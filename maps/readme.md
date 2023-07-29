@@ -16,7 +16,8 @@ apt install -y pkg-config \
     libgeos-dev \
     libgif-dev \
     libfreetype-dev \
-    cmake
+    cmake \
+    swig
 ```
 
 Install tcl.gd for NaviServer:
