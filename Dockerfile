@@ -155,6 +155,9 @@ RUN wget -O oacs-5-10-0.pg_dump.gz "https://openacs.org/storage/download/oacs-5-
     /etc/init.d/postgresql start && \
     su postgres -c 'psql -f oacs-5-10-0.pg_dump oacs-5-10-0'
 
+RUN chown -R nsadmin:nsadmin /var/www/oacs-5-10-0/packages/maps/ && \
+    chmod -R 775 /var/www/oacs-5-10-0/packages/maps
+
 ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 
 EXPOSE 8000
