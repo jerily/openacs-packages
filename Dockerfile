@@ -146,7 +146,7 @@ RUN wget https://download.osgeo.org/mapserver/mapserver-8.0.1.tar.gz && \
     cd ../mapscript/tcl && \
     cp /var/www/oacs-5-10-0/packages/maps/files/* . && \
     mv mapscript.i .. && \
-    swig -tcl8 -I/usr/local/include/mapserver/ -outcurrentdir -namespace -DUSE_NAVISERVER ../mapscript.i && \
+    swig -tcl8 -I/usr/local/ns/include/mapserver/ -outcurrentdir -namespace -DUSE_NAVISERVER ../mapscript.i && \
     make && \
     make install
 
