@@ -18,7 +18,7 @@ RUN apt update && apt install -y \
     libgcrypt-dev \
     pkg-config \
     libgd-dev \
-    autoreconf \
+    autoconf \
     cmake \
     cvs \
     git \
