@@ -24,6 +24,9 @@ RUN apt update && apt install -y \
     libproj-dev \
     libgdal-dev \
     libcairo-dev \
+    libgeos-dev \
+    libgif-dev \
+    libfreetype-dev \
     cmake \
     cvs \
     git \
