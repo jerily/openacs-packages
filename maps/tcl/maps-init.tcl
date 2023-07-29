@@ -1,0 +1,1 @@
+ns_cache_create xo_map_server_cache 200MB 

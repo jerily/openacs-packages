@@ -17,6 +17,7 @@ RUN apt update && apt install -y \
     zlib1g-dev \
     libgcrypt-dev \
     pkg-config \
+    libgd-dev \
     cmake \
     cvs \
     git \
@@ -62,6 +63,7 @@ RUN cd /var/www/oacs-5-10-0/ && \
     mv openacs-packages/pgvector-driver ./openacs-4/packages/ && \
     mv openacs-packages/pgembedding-driver ./openacs-4/packages/ && \
     mv openacs-packages/sample-2fa ./openacs-4/packages/ && \
+    mv openacs-packages/maps ./openacs-4/packages/ && \
     cd openacs-4/packages/search && \
     patch -p0 < ../../../openacs-packages/search.patch && \
     cd ../xowiki && \
@@ -112,6 +114,27 @@ RUN git clone https://github.com/neondatabase/pg_embedding.git && \
     git apply /var/www/oacs-5-10-0/packages/pgembedding-driver/pg_embedding.patch && \
     make && \
     make install  
+
+RUN git clone https://github.com/flightaware/tcl.gd.git && \
+    cd tcl.gd && \
+    autoreconf && \
+    ./configure --with-tcl=/usr/local/ns/lib/ && \
+    make && \
+    make install
+
+RUN wget https://download.osgeo.org/mapserver/mapserver-8.0.1.tar.gz && \
+    tar -xzvf mapserver-8.0.1.tar.gz && \
+    cd mapserver-8.0.1 && \
+    mkdir build && \
+    cd build && \
+    cmake .. -DWITH_FCGI=0 -DWITH_HARFBUZZ=0 -DWITH_FRIBIDI=0 -DWITH_PROTOBUFC=0 -DWITH_THREAD_SAFETY=1 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/usr/local/ns && \
+    make && \
+    make install && \
+    cd ../mapscript/tcl && \
+    cp /var/www/oacs-5-10-0/packages/files/* . && \
+    swig -tcl8 -I/usr/local/include/mapserver/ -outcurrentdir -namespace -DUSE_NAVISERVER ../mapscript.i && \
+    gcc -shared -o mapscript.so ./mapscript_wrap.c -I/usr/local/include/mapserver -I/usr/include/gdal -I/usr/include/libxml2/ -I/usr/local/ns/include -L/usr/local/ns/lib -lnsd -ltcl8.6 -lmapserver -DPROJ_VERSION_MAJOR=8 -DUSE_NAVISERVER -fPIC && \
+    cp mapscript.so /usr/local/ns/bin/
 
 RUN wget -O oacs-5-10-0.pg_dump.gz "https://openacs.org/storage/download/oacs-5-10-0.pg_dump.gz?file_id=5741618" && \
     gunzip oacs-5-10-0.pg_dump.gz && \
