@@ -19,6 +19,11 @@ RUN apt update && apt install -y \
     pkg-config \
     libgd-dev \
     autoconf \
+    libpng-dev \
+    libjpeg-dev \
+    libproj-dev \
+    libgdal-dev \
+    libcairo-dev \
     cmake \
     cvs \
     git \
