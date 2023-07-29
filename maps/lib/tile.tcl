@@ -64,7 +64,7 @@ ns_cache_eval -expires 30 -- xo_map_server_cache szMetaImg:${szMetaImg} {
 	if { ![file exists ${szMetaDir}/${szMetaImg}] || ${force_p} } {
 	    #catch { file delete -force -- ${szMetaDir}/${szMetaImg} }
 	    set oMap [::mapscript::mapObj -args ${szMapFile}]
-	    ns_log notice oMap=$oMap
+	    #ns_log notice oMap=$oMap
 	    # Metatile width/height include 2x the metaBuffer value
 	    ${oMap} setSize [expr { ${tileWidth} * ${metaWidth} + 2*${metaBuffer} }] [expr { ${tileHeight} * ${metaHeight} + 2*${metaBuffer} }]
 	    # Tell MapServer to not render labels inside the metaBuffer area
@@ -90,7 +90,7 @@ ns_cache_eval -expires 30 -- xo_map_server_cache szMetaImg:${szMetaImg} {
 	    ########### groups or layers code HERE
 
 	    set oImg [${oMap} draw]
-	    ns_log notice metaImg=[file join ${szMetaDir} ${szMetaImg}]
+	    #ns_log notice metaImg=[file join ${szMetaDir} ${szMetaImg}]
 	    #catch { file delete -force -- ${szMetaDir}/${szMetaImg} }
 	    ${oImg} save [file join ${szMetaDir} ${szMetaImg}]
 	    ${oImg} -delete
