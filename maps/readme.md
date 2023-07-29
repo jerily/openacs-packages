@@ -43,6 +43,7 @@ make
 make install
 cd ../mapscript/tcl
 cp ../../../openacs-packages/maps/files/* .
+mv mapscript.i ..
 swig -tcl8 -I/usr/local/ns/include/mapserver/ -outcurrentdir -namespace -DUSE_NAVISERVER ../mapscript.i
 make
 make install
