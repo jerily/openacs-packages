@@ -1,6 +1,4 @@
-pgvector-driver
-pgembedding-driver
-sample-2fa
+# pgvector-driver, pgembedding-driver, sample-2fa, and maps for OpenACS
 
 ## Try them out with docker
 ```
