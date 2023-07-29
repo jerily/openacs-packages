@@ -132,7 +132,8 @@ RUN git clone https://github.com/flightaware/tcl.gd.git && \
     make && \
     make install
 
-RUN apt update && apt install -y libgdal-dev libfreetype-dev libcairo-dev swig
+RUN apt update && apt install -y libgdal-dev libfreetype-dev libcairo-dev
+RUN apt update && apt install -y swig
 
 RUN wget https://download.osgeo.org/mapserver/mapserver-8.0.1.tar.gz && \
     tar -xzvf mapserver-8.0.1.tar.gz && \
