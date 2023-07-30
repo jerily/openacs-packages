@@ -1,1 +1,3 @@
 ns_cache_create xo_map_server_cache 200MB 
+ns_mutex create xo_map_server_meta
+ns_mutex create xo_map_server_tile

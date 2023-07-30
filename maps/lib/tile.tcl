@@ -65,7 +65,8 @@ set metaLeft [expr { ${metaLeft} - ${metaBuffer} }]
 set metaTop  [expr { ${metaTop} - ${metaBuffer} }]
 
 set szMetaImg s.${scale}.t.${metaTop}.l.${metaLeft}.${szImageExtension}
-ns_cache_eval -expires 30 -- xo_map_server_cache szMetaImg:${szMetaImg} {
+ns_mutex eval xo_map_server_meta {
+  ns_cache_eval -expires 30 -- xo_map_server_cache szMetaImg:${szMetaImg} {
     if { ![file exists ${szCacheFile}] || ${force_p} } {
 	if { ![file exists ${szMetaDir}/${szMetaImg}] || ${force_p} } {
 	    #catch { file delete -force -- ${szMetaDir}/${szMetaImg} }
@@ -104,10 +105,12 @@ ns_cache_eval -expires 30 -- xo_map_server_cache szMetaImg:${szMetaImg} {
 	    $oMap -delete
 	}
     }
+  }
 }
 
 
-ns_cache_eval -expires 30 -- xo_map_server_cache szCacheFile:${szCacheFile} {
+ns_mutex eval xo_map_server_tile {
+  ns_cache_eval -expires 30 -- xo_map_server_cache szCacheFile:${szCacheFile} {
 
     if { ![file exists ${szCacheFile}] || ${force_p} } {
 	    set chan [open [file join ${szMetaDir} ${szMetaImg}] "rb"]
@@ -139,6 +142,7 @@ ns_cache_eval -expires 30 -- xo_map_server_cache szCacheFile:${szCacheFile} {
 	${oGDImg} delete
 
     }
+  }
 }
 
 #ad_returnfile_background 200 ${szImageHeader} ${szCacheFile}
