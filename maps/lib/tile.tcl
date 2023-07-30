@@ -5,6 +5,12 @@ package require tclgd
 set path [acs_root_dir]/packages/maps/lib/
 source ${path}/config.tcl
 
+proc genname {prefix} {
+	global tile_counter
+	incr tile_counter
+	#ns_log notice tile_counter=$tile_counter
+	return "${prefix}_[ns_conn id]_[set tile_counter]"
+}
 
 ad_page_contract {
     @author Neophytos Demetriou
@@ -105,12 +111,12 @@ ns_cache_eval -expires 30 -- xo_map_server_cache szCacheFile:${szCacheFile} {
 
     if { ![file exists ${szCacheFile}] || ${force_p} } {
 	    set chan [open [file join ${szMetaDir} ${szMetaImg}] "rb"]
-	set oGDImg [GD create_from_png myimage $chan]
+	set oGDImg [GD create_from_png [genname myimage] $chan]
 
 	for { set j 0 } { ${j} < ${metaHeight} } { incr j } {
 	    for { set i 0 } { ${i} < ${metaWidth} } { incr i } {
-		set oTile [GD create mytile ${tileWidth} ${tileHeight}]
-ns_log notice oTile=$oTile
+		set oTile [GD create [genname mytile] ${tileWidth} ${tileHeight}]
+#ns_log notice oTile=$oTile
 		# Allocate BG color for the tile (in case the metatile has transparent BG)
 		#gd::colorAllocate ${oTile} [${oColor} cget -red] [${oColor} cget -green] [${oColor} cget -blue]
 		${oTile} allocate_color 156 178 205
