@@ -2,6 +2,7 @@
 
 ![Maps Sample Screenshot - Cyprus](maps-screenshot-1.png "Maps Sample Screenshot - Cyprus")
 ![Maps Sample Screenshot - Paphos](maps-screenshot-2.png "Maps Sample Screenshot - Paphos")
+![Maps Sample Screenshot - Paphos (OpenStreetMap)](maps-screenshot-3.png "Maps Sample Screenshot - Paphos (OpenStreetMap)")
 
 
 ```
