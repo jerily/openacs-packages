@@ -172,7 +172,7 @@ RUN wget http://download.geofabrik.de/europe/cyprus-latest.osm.pbf
 RUN useradd osm
 RUN /etc/init.d/postgresql start && \
     su postgres -c "createdb samplegisdb -E unicode" && \
-    su postgres -c "psql -c \"ALTER ROLE osm PASSWORD 'osm'\" samplegisdb" && \
+    su postgres -c "psql -c \"CREATE ROLE osm WITH PASSWORD 'osm'\" samplegisdb" && \
     su postgres -c "psql -c 'create extension postgis' samplegisdb" && \
     su postgres -c "psql -c 'ALTER ROLE \"osm\" WITH LOGIN' samplegisdb" \
     imposm import -connection postgis://osm:osm@localhost:5436/samplegisdb -mapping /var/www/oacs-5-10-0/packages/maps/data/example-mapping.json -read cyprus-latest.osm.pbf -write -dbschema-import public -overwritecache -srid 4326
