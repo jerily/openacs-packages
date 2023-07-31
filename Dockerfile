@@ -158,11 +158,12 @@ RUN wget -O oacs-5-10-0.pg_dump.gz "https://openacs.org/storage/download/oacs-5-
 RUN chown -R nsadmin:nsadmin /var/www/oacs-5-10-0/packages/maps/ && \
     chmod -R 775 /var/www/oacs-5-10-0/packages/maps
 
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+RUN apt update && apt install -y libleveldb-dev go gnupg2
 
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | tee  /etc/apt/sources.list.d/pgdg.list
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+    echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | tee  /etc/apt/sources.list.d/pgdg.list && \
+    apt install -y  postgis postgresql-14-postgis-3
 
-RUN apt update && apt install -y libleveldb-dev go gnupg2 postgis postgresql-14-postgis-3
 
 RUN go install github.com/omniscale/imposm3/cmd/imposm@latest
 
