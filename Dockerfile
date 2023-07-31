@@ -165,7 +165,7 @@ RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-k
     apt install -y  postgis postgresql-14-postgis-3
 
 
-RUN go install github.com/omniscale/imposm3/cmd/imposm@latest
+RUN GOBIN=/usr/bin/ go install github.com/omniscale/imposm3/cmd/imposm@latest
 
 RUN wget http://download.geofabrik.de/europe/cyprus-latest.osm.pbf
 
