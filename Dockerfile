@@ -170,12 +170,12 @@ RUN go install github.com/omniscale/imposm3/cmd/imposm@latest
 RUN wget http://download.geofabrik.de/europe/cyprus-latest.osm.pbf
 
 RUN useradd osm
-RUN su postgres -c "createdb samplegisdb -E unicode"
-RUN su postgres -c "psql -c \"ALTER ROLE osm PASSWORD 'osm'\" samplegisdb"
-RUN su postgres -c "psql -c 'create extension postgis' samplegisdb"
-RUN su postgres -c "psql -c 'ALTER ROLE \"osm\" WITH LOGIN' samplegisdb"
-
-RUN imposm import -connection postgis://osm:osm@localhost:5436/samplegisdb -mapping /var/www/oacs-5-10-0/packages/maps/data/example-mapping.json -read cyprus-latest.osm.pbf -write -dbschema-import public -overwritecache -srid 4326
+RUN /etc/init.d/postgresql start && \
+    su postgres -c "createdb samplegisdb -E unicode" && \
+    su postgres -c "psql -c \"ALTER ROLE osm PASSWORD 'osm'\" samplegisdb" && \
+    su postgres -c "psql -c 'create extension postgis' samplegisdb" && \
+    su postgres -c "psql -c 'ALTER ROLE \"osm\" WITH LOGIN' samplegisdb" \
+    imposm import -connection postgis://osm:osm@localhost:5436/samplegisdb -mapping /var/www/oacs-5-10-0/packages/maps/data/example-mapping.json -read cyprus-latest.osm.pbf -write -dbschema-import public -overwritecache -srid 4326
 
 ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 
