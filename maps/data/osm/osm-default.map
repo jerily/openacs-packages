@@ -55,7 +55,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places0"
  MINSCALEDENOM 332808204
  MAXSCALEDENOM 99999999999
@@ -105,7 +105,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places1"
  MINSCALEDENOM 166404102
  MAXSCALEDENOM 325008
@@ -155,7 +155,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places2"
  MINSCALEDENOM 83202051
  MAXSCALEDENOM 166404102
@@ -223,7 +223,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places3"
  MINSCALEDENOM 41601025
  MAXSCALEDENOM 83202051
@@ -301,7 +301,7 @@ LAYER
     NAME "landuse4"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages_gen0)            as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -377,7 +377,7 @@ LAYER
     NAME "waterarea4"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas_gen0) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 41601025
     MINSCALEDENOM 20800512
@@ -404,7 +404,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places4"
  MINSCALEDENOM 20800512
  MAXSCALEDENOM 41601025
@@ -482,7 +482,7 @@ LAYER
     NAME "landuse5"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages_gen0)            as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -558,7 +558,7 @@ LAYER
     NAME "waterarea5"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas_gen0) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 20800512
     MINSCALEDENOM 10400256
@@ -588,7 +588,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type from public.osm_roads_gen0 where type in ('trunk','motorway') order by z_order asc) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -617,7 +617,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places5"
  MINSCALEDENOM 10400256
  MAXSCALEDENOM 20800512
@@ -695,7 +695,7 @@ LAYER
     NAME "landuse6"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages_gen0)            as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -771,7 +771,7 @@ LAYER
     NAME "waterarea6"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas_gen0) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 10400256
     MINSCALEDENOM 5200128
@@ -811,7 +811,7 @@ LAYER
     STATUS ON
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type, name as name from public.osm_waterways_gen0 where type='river') as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     MAXSCALEDENOM 10400256
@@ -869,7 +869,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type from public.osm_roads_gen0 where type in ('trunk','motorway') order by z_order asc) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -898,7 +898,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places6"
  MINSCALEDENOM 5200128
  MAXSCALEDENOM 10400256
@@ -976,7 +976,7 @@ LAYER
     NAME "landuse7"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages_gen0)            as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -1052,7 +1052,7 @@ LAYER
     NAME "waterarea7"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas_gen0) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 5200128
     MINSCALEDENOM 2600064
@@ -1092,7 +1092,7 @@ LAYER
     STATUS ON
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type, name as name from public.osm_waterways_gen0 where type='river') as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     MAXSCALEDENOM 5200128
@@ -1150,7 +1150,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type from public.osm_roads_gen0 where type in ('trunk','motorway') order by z_order asc) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -1189,7 +1189,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places7"
  MINSCALEDENOM 2600064
  MAXSCALEDENOM 5200128
@@ -1267,7 +1267,7 @@ LAYER
     NAME "landuse8"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages_gen0)            as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -1343,7 +1343,7 @@ LAYER
     NAME "waterarea8"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas_gen0) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 2600064
     MINSCALEDENOM 1300032
@@ -1383,7 +1383,7 @@ LAYER
     STATUS ON
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type, name as name from public.osm_waterways_gen0 where type='river') as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     MAXSCALEDENOM 2600064
@@ -1441,7 +1441,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type from public.osm_roads_gen1 where type in ('trunk','motorway','primary') order by z_order asc) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -1487,7 +1487,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places8"
  MINSCALEDENOM 1300032
  MAXSCALEDENOM 2600064
@@ -1572,7 +1572,7 @@ LAYER
     NAME "landuse9"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages_gen1       where type in ('forest','wood','industrial','commercial','residential')) as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -1648,7 +1648,7 @@ LAYER
     NAME "waterarea9"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas_gen1) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 1300032
     MINSCALEDENOM 650016
@@ -1688,7 +1688,7 @@ LAYER
     STATUS ON
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type, name as name from public.osm_waterways_gen1 where type='river') as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     MAXSCALEDENOM 1300032
@@ -1746,7 +1746,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type from public.osm_roads_gen1 where type in ('secondary','trunk','motorway','primary') order by z_order asc) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -1828,7 +1828,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places9"
  MINSCALEDENOM 650016
  MAXSCALEDENOM 1300032
@@ -1913,7 +1913,7 @@ LAYER
     NAME "landuse10"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages_gen1       where type in ('forest','wood','pedestrian','cemetery','industrial','commercial',      'brownfield','residential','school','college','university',      'military','park','golf_course','hospital','parking','stadium','sports_center',      'pitch') order by area desc) as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -1989,7 +1989,7 @@ LAYER
     NAME "waterarea10"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas_gen1) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 650016
     MINSCALEDENOM 325008
@@ -2029,7 +2029,7 @@ LAYER
     STATUS ON
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type, name as name from public.osm_waterways_gen1 where type='river') as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     MAXSCALEDENOM 650016
@@ -2102,7 +2102,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type from public.osm_roads_gen1 ) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -2226,7 +2226,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type from public.osm_aeroways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     CLASS
@@ -2260,7 +2260,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places10"
  MINSCALEDENOM 325008
  MAXSCALEDENOM 650016
@@ -2339,7 +2339,7 @@ LAYER
     NAME "landuse11"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages_gen1       where type in ('forest','wood','pedestrian','cemetery','industrial','commercial',      'brownfield','residential','school','college','university',      'military','park','golf_course','hospital','parking','stadium','sports_center',      'pitch') order by area desc) as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -2446,7 +2446,7 @@ LAYER
    NAME "transport_areas11"
    GROUP "default"
    CONNECTIONTYPE POSTGIS
-   CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+   CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
    DATA "geometry from public.osm_transport_areas using unique osm_id using srid=4326"
    PROCESSING "CLOSE_CONNECTION=DEFER"
    MAXSCALEDENOM 650016
@@ -2467,7 +2467,7 @@ LAYER
     NAME "waterarea11"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas_gen1) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 650016
     MINSCALEDENOM 162504
@@ -2507,7 +2507,7 @@ LAYER
     STATUS ON
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type, name as name from public.osm_waterways_gen1 where type='river') as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     MAXSCALEDENOM 650016
@@ -2580,7 +2580,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type from public.osm_roads order by z_order asc) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -2711,7 +2711,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type from public.osm_aeroways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     CLASS
@@ -2745,7 +2745,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places11"
  MINSCALEDENOM 162504
  MAXSCALEDENOM 650016
@@ -2848,7 +2848,7 @@ LAYER
     NAME "landuse12"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages       where type in ('forest','wood','pedestrian','cemetery','industrial','commercial',      'brownfield','residential','school','college','university',      'military','park','golf_course','hospital','parking','stadium','sports_center',      'pitch') order by area desc) as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -3041,7 +3041,7 @@ LAYER
    NAME "transport_areas12"
    GROUP "default"
    CONNECTIONTYPE POSTGIS
-   CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+   CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
    DATA "geometry from public.osm_transport_areas using unique osm_id using srid=4326"
    PROCESSING "CLOSE_CONNECTION=DEFER"
    MAXSCALEDENOM 162504
@@ -3062,7 +3062,7 @@ LAYER
     NAME "waterarea12"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 162504
     MINSCALEDENOM 81252
@@ -3102,7 +3102,7 @@ LAYER
     STATUS ON
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type, name as name from public.osm_waterways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     MAXSCALEDENOM 162504
@@ -3190,7 +3190,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type from public.osm_roads order by z_order asc) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -3341,7 +3341,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type from public.osm_aeroways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     CLASS
@@ -3375,7 +3375,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places12"
  MINSCALEDENOM 81252
  MAXSCALEDENOM 162504
@@ -3472,7 +3472,7 @@ LAYER
     NAME "landuse13"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages       where type in ('forest','wood','pedestrian','cemetery','industrial','commercial',      'brownfield','residential','school','college','university',      'military','park','golf_course','hospital','parking','stadium','sports_center',      'pitch') order by area desc) as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -3665,7 +3665,7 @@ LAYER
    NAME "transport_areas13"
    GROUP "default"
    CONNECTIONTYPE POSTGIS
-   CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+   CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
    DATA "geometry from public.osm_transport_areas using unique osm_id using srid=4326"
    PROCESSING "CLOSE_CONNECTION=DEFER"
    MAXSCALEDENOM 81252
@@ -3686,7 +3686,7 @@ LAYER
     NAME "waterarea13"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 81252
     MINSCALEDENOM 40626
@@ -3726,7 +3726,7 @@ LAYER
     STATUS ON
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type, name as name from public.osm_waterways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     MAXSCALEDENOM 81252
@@ -3814,7 +3814,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type from public.osm_roads order by z_order asc) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -4000,7 +4000,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type from public.osm_aeroways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     CLASS
@@ -4034,7 +4034,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places13"
  MINSCALEDENOM 40626
  MAXSCALEDENOM 81252
@@ -4185,7 +4185,7 @@ LAYER
     NAME "landuse14"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages       where type in ('forest','wood','pedestrian','cemetery','industrial','commercial',      'brownfield','residential','school','college','university',      'military','park','golf_course','hospital','parking','stadium','sports_center',      'pitch') order by area desc) as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -4378,7 +4378,7 @@ LAYER
    NAME "transport_areas14"
    GROUP "default"
    CONNECTIONTYPE POSTGIS
-   CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+   CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
    DATA "geometry from public.osm_transport_areas using unique osm_id using srid=4326"
    PROCESSING "CLOSE_CONNECTION=DEFER"
    MAXSCALEDENOM 40626
@@ -4399,7 +4399,7 @@ LAYER
     NAME "waterarea14"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 40626
     MINSCALEDENOM 20313
@@ -4447,7 +4447,7 @@ LAYER
     STATUS ON
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type, name as name from public.osm_waterways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     MAXSCALEDENOM 40626
@@ -4535,7 +4535,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type||bridge||tunnel as type from public.osm_roads order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -4933,7 +4933,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type from public.osm_aeroways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     CLASS
@@ -4967,7 +4967,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places14"
  MINSCALEDENOM 20313
  MAXSCALEDENOM 40626
@@ -5112,7 +5112,7 @@ LAYER
     NAME "landuse15"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages       where type in ('forest','wood','pedestrian','cemetery','industrial','commercial',      'brownfield','residential','school','college','university',      'military','park','golf_course','hospital','parking','stadium','sports_center',      'pitch') order by area desc) as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -5318,7 +5318,7 @@ LAYER
    NAME "transport_areas15"
    GROUP "default"
    CONNECTIONTYPE POSTGIS
-   CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+   CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
    DATA "geometry from public.osm_transport_areas using unique osm_id using srid=4326"
    PROCESSING "CLOSE_CONNECTION=DEFER"
    MAXSCALEDENOM 20313
@@ -5339,7 +5339,7 @@ LAYER
     NAME "waterarea15"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 20313
     MINSCALEDENOM 10156
@@ -5387,7 +5387,7 @@ LAYER
     STATUS ON
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type, name as name from public.osm_waterways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     MAXSCALEDENOM 20313
@@ -5475,7 +5475,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type||bridge||tunnel as type from public.osm_roads order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -5966,7 +5966,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type from public.osm_aeroways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     CLASS
@@ -6001,7 +6001,7 @@ LAYER
     NAME "buildings15"
     TYPE POLYGON
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id, name as name from public.osm_buildings) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     PROCESSING "LABEL_NO_CLIP=ON"
@@ -6040,7 +6040,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places15"
  MINSCALEDENOM 10156
  MAXSCALEDENOM 20313
@@ -6185,7 +6185,7 @@ LAYER
     NAME "landuse16"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages       where type in ('forest','wood','pedestrian','cemetery','industrial','commercial',      'brownfield','residential','school','college','university',      'military','park','golf_course','hospital','parking','stadium','sports_center',      'pitch') order by area desc) as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -6391,7 +6391,7 @@ LAYER
    NAME "transport_areas16"
    GROUP "default"
    CONNECTIONTYPE POSTGIS
-   CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+   CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
    DATA "geometry from public.osm_transport_areas using unique osm_id using srid=4326"
    PROCESSING "CLOSE_CONNECTION=DEFER"
    MAXSCALEDENOM 10156
@@ -6412,7 +6412,7 @@ LAYER
     NAME "waterarea16"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 10156
     MINSCALEDENOM 5078
@@ -6460,7 +6460,7 @@ LAYER
     STATUS ON
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type, name as name from public.osm_waterways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     MAXSCALEDENOM 10156
@@ -6548,7 +6548,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type||bridge||tunnel as type from public.osm_roads order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -7039,7 +7039,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type from public.osm_aeroways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     CLASS
@@ -7074,7 +7074,7 @@ LAYER
     NAME "buildings16"
     TYPE POLYGON
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id, name as name from public.osm_buildings) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     PROCESSING "LABEL_NO_CLIP=ON"
@@ -7113,7 +7113,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places16"
  MINSCALEDENOM 5078
  MAXSCALEDENOM 10156
@@ -7240,7 +7240,7 @@ LAYER
     NAME "landuse17"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages       where type in ('forest','wood','pedestrian','cemetery','industrial','commercial',      'brownfield','residential','school','college','university',      'military','park','golf_course','hospital','parking','stadium','sports_center',      'pitch') order by area desc) as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -7446,7 +7446,7 @@ LAYER
    NAME "transport_areas17"
    GROUP "default"
    CONNECTIONTYPE POSTGIS
-   CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+   CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
    DATA "geometry from public.osm_transport_areas using unique osm_id using srid=4326"
    PROCESSING "CLOSE_CONNECTION=DEFER"
    MAXSCALEDENOM 5078
@@ -7467,7 +7467,7 @@ LAYER
     NAME "waterarea17"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 5078
     MINSCALEDENOM 2539
@@ -7515,7 +7515,7 @@ LAYER
     STATUS ON
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type, name as name from public.osm_waterways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     MAXSCALEDENOM 5078
@@ -7603,7 +7603,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type||bridge||tunnel as type from public.osm_roads order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -8094,7 +8094,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type from public.osm_aeroways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     CLASS
@@ -8129,7 +8129,7 @@ LAYER
     NAME "buildings17"
     TYPE POLYGON
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id, name as name from public.osm_buildings) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     PROCESSING "LABEL_NO_CLIP=ON"
@@ -8168,7 +8168,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places17"
  MINSCALEDENOM 2539
  MAXSCALEDENOM 5078
@@ -8295,7 +8295,7 @@ LAYER
     NAME "landuse18"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry ,osm_id, type, name as name from public.osm_landusages       where type in ('forest','wood','pedestrian','cemetery','industrial','commercial',      'brownfield','residential','school','college','university',      'military','park','golf_course','hospital','parking','stadium','sports_center',      'pitch') order by area desc) as foo using unique osm_id using srid=4326"
     PROCESSING "LABEL_NO_CLIP=ON"
     PROCESSING "CLOSE_CONNECTION=DEFER"
@@ -8501,7 +8501,7 @@ LAYER
    NAME "transport_areas18"
    GROUP "default"
    CONNECTIONTYPE POSTGIS
-   CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+   CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
    DATA "geometry from public.osm_transport_areas using unique osm_id using srid=4326"
    PROCESSING "CLOSE_CONNECTION=DEFER"
    MAXSCALEDENOM 2539
@@ -8522,7 +8522,7 @@ LAYER
     NAME "waterarea18"
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id ,name as name,type from public.osm_waterareas) as foo using unique osm_id using srid=4326"
     MAXSCALEDENOM 2539
     MINSCALEDENOM 0
@@ -8570,7 +8570,7 @@ LAYER
     STATUS ON
     GROUP "default"
     CONNECTIONTYPE POSTGIS
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type, name as name from public.osm_waterways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     MAXSCALEDENOM 2539
@@ -8658,7 +8658,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select osm_id,geometry,name as name,ref,type||bridge||tunnel as type from public.osm_roads order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     CLASSITEM "type"
@@ -9149,7 +9149,7 @@ LAYER
         "init=epsg:4326"
     END
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry, osm_id, type from public.osm_aeroways) as foo using unique osm_id using srid=4326"
     CLASSITEM "type"
     CLASS
@@ -9184,7 +9184,7 @@ LAYER
     NAME "buildings18"
     TYPE POLYGON
     CONNECTIONTYPE postgis
-    CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+    CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
     DATA "geometry from (select geometry,osm_id, name as name from public.osm_buildings) as foo using unique osm_id using srid=4326"
     LABELITEM "name"
     PROCESSING "LABEL_NO_CLIP=ON"
@@ -9223,7 +9223,7 @@ LAYER
   "init=epsg:4326"
  END
  CONNECTIONTYPE postgis
- CONNECTION "host=localhost dbname=samplegisdb user=osm password=osm port=5432"
+ CONNECTION "host=localhost dbname=samplegisdb user=phi password=letmein port=5436"
  NAME "places18"
  MINSCALEDENOM 0
  MAXSCALEDENOM 2539

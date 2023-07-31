@@ -5,6 +5,14 @@ package require tclgd
 set path [acs_root_dir]/packages/maps/lib/
 source ${path}/config.tcl
 
+proc debugall {} {
+foreach varname [info vars ::mapscript::*ERR] {
+  if { [info exists $varname] } {
+    puts $varname=[::mapscript::msGetErrorString [set $varname]]
+  }
+}
+}
+
 proc genname {prefix} {
 	global tile_counter
 	incr tile_counter
@@ -17,8 +25,9 @@ ad_page_contract {
 } {
     {t:integer "0"}
     {l:integer "0"}
-    {s:integer "15000000"}
+    {s:integer "750000"}
 }
+
 
 #ns_log notice "t=$t l=$l s=$s"
 
@@ -97,6 +106,7 @@ ns_mutex eval xo_map_server_meta {
 	    ########### groups or layers code HERE
 
 	    set oImg [${oMap} draw]
+	    debugall
 	    #ns_log notice metaImg=[file join ${szMetaDir} ${szMetaImg}]
 	    #catch { file delete -force -- ${szMetaDir}/${szMetaImg} }
 	    ${oImg} save [file join ${szMetaDir} ${szMetaImg}]

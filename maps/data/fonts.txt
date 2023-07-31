@@ -1,2 +1,4 @@
-Vera    ./vera/Vera.ttf
-VeraBd  ./vera/VeraBd.ttf
+Vera    ./fonts/Vera.ttf
+VeraBd  ./fonts/VeraBd.ttf
+sc ./fonts/DejaVuSansCondensed.ttf
+scb ./fonts/DejaVuSansCondensed-Bold.ttf

@@ -158,6 +158,23 @@ RUN wget -O oacs-5-10-0.pg_dump.gz "https://openacs.org/storage/download/oacs-5-
 RUN chown -R nsadmin:nsadmin /var/www/oacs-5-10-0/packages/maps/ && \
     chmod -R 775 /var/www/oacs-5-10-0/packages/maps
 
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+    echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | tee  /etc/apt/sources.list.d/pgdg.list
+
+RUN apt update && apt install -y libleveldb-dev go gnupg2 postgis postgresql-14-postgis-3
+
+RUN go install github.com/omniscale/imposm3/cmd/imposm@latest
+
+RUN wget http://download.geofabrik.de/europe/cyprus-latest.osm.pbf
+
+RUN useradd osm
+RUN sudo su postgres -c "createdb samplegisdb -E unicode"
+RUN sudo su postgres -c "psql -c \"ALTER ROLE osm PASSWORD 'osm'\" samplegisdb"
+RUN sudo su postgres -c "psql -c 'create extension postgis' samplegisdb"
+RUN sudo su postgres -c "psql -c 'ALTER ROLE \"osm\" WITH LOGIN' samplegisdb"
+
+RUN imposm import -connection postgis://osm:osm@localhost:5436/samplegisdb -mapping /var/www/oacs-5-10-0/packages/maps/data/example-mapping.json -read cyprus-latest.osm.pbf -write -dbschema-import public -overwritecache -srid 4326
+
 ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 
 EXPOSE 8000

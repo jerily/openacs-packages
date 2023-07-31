@@ -49,21 +49,14 @@ set szBaseDataDir ${szBaseDir}/data/
 set szBaseCacheDir ${szBaseDir}/data/tmp-cache/
 set szMapName Cyprus
 set szMapFile [file join ${szBaseDataDir} cyprus.map]
-#set szMapFile ${szBaseDataDir}/world.map
-#set szMapFile ${szBaseDataDir}/world3.map
-#set szMapFile ${szBaseDataDir}/world5.map
-#set szMapFile ${szBaseDataDir}/world6.map
-#set szMapFile ${szBaseDataDir}/world7.map
-#set szMapFile ${szBaseDataDir}/world8.map
-#set szMapFile ${szBaseDataDir}/world9.map
 set anScales {30000000 15000000 7500000 3000000 1500000 750000 300000 100000 30000 7500 3000 1500} ;# {15000000 7500000 3000000 1000000} ;# {75000 62500 50000 37500 25000 12500} ;# 
 
 
 set szMetaDir ${szBaseDataDir}/tmp-meta
 set szCacheDir ${szBaseDataDir}/tmp-cache
 
-#set szMapImageFormat PNG
-set szMapImageFormat AGG_Q
+set szMapImageFormat PNG
+#set szMapImageFormat AGG_Q
 set szMapImageCreateFunction "imagecreatefrompng"
 set szImageExtension "png"
 set szImageCreateFunction "imagecreate"
@@ -74,4 +67,4 @@ set szReferenceMapFile ${szMetaDir}/${szReferenceMapName}.${szImageExtension}
 #set szURL "./"
 set szURL "http://localhost:8000/maps/"
 
-set force_p false ;# false ;# true
+set force_p false

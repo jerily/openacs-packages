@@ -59,6 +59,7 @@ set maxY [${rectPtr} cget -maxy]
 
 ns_log notice "minX=$minX minY=$minY maxX=$maxX maxY=$maxY rectPtr=$rectPtr"
 #set nScale [${oMap} cget -scale]
+#set nScale 7500
 set nScale 750000
 
 if { ${nScale} > [lindex ${anScales} 0] } {
@@ -133,8 +134,10 @@ append szResult "this.selectMap('${szMap}');"
 
 
 
-set default_longitude 33.3667
-set default_latitude 35.1667
+#set default_longitude 34.982302
+#set default_latitude 33.145128
+set default_longitude 33.30425360298354
+set default_latitude 35.15554817482309
 #set lon [::util::coalesce [ad_conn UL_LNG] $default_longitude]
 #set lat [::util::coalesce [ad_conn UL_LAT] $default_latitude]
 set lon $default_longitude
