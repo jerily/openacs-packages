@@ -158,8 +158,9 @@ RUN wget -O oacs-5-10-0.pg_dump.gz "https://openacs.org/storage/download/oacs-5-
 RUN chown -R nsadmin:nsadmin /var/www/oacs-5-10-0/packages/maps/ && \
     chmod -R 775 /var/www/oacs-5-10-0/packages/maps
 
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | tee  /etc/apt/sources.list.d/pgdg.list
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | tee  /etc/apt/sources.list.d/pgdg.list
 
 RUN apt update && apt install -y libleveldb-dev go gnupg2 postgis postgresql-14-postgis-3
 
