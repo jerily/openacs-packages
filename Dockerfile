@@ -174,7 +174,7 @@ RUN /etc/init.d/postgresql start && \
     su postgres -c "createdb samplegisdb -E unicode" && \
     su postgres -c "psql -c \"CREATE ROLE osm WITH PASSWORD 'osm'\" samplegisdb" && \
     su postgres -c "psql -c 'create extension postgis' samplegisdb" && \
-    su postgres -c "psql -c 'ALTER ROLE \"osm\" WITH LOGIN' samplegisdb" \
+    su postgres -c "psql -c 'ALTER ROLE \"osm\" WITH LOGIN' samplegisdb" && \
     imposm import -connection postgis://osm:osm@localhost:5436/samplegisdb -mapping /var/www/oacs-5-10-0/packages/maps/data/example-mapping.json -read cyprus-latest.osm.pbf -write -dbschema-import public -overwritecache -srid 4326
 
 ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
