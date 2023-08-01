@@ -180,6 +180,9 @@ RUN /etc/init.d/postgresql start && \
 ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 
 EXPOSE 8000
-STOPSIGNAL SIGQUIT
+STOPSIGNAL SIGTERM
 
-CMD bash -c "/etc/init.d/postgresql start && /usr/local/ns/bin/nsd -f -t /usr/local/ns/config-oacs-5-10-0.tcl -u nsadmin -g nsadmin"
+RUN echo "#!/bin/bash\n\n/etc/init.d/postgresql start\nexec /usr/local/ns/bin/nsd -f -t /usr/local/ns/config-oacs-5-10-0.tcl -u nsadmin -g nsadmin\n" | tee /start.sh
+RUN chmod +x /start.sh
+
+ENTRYPOINT ["/start.sh"]
