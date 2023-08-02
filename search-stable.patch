@@ -1,0 +1,150 @@
+4,5c4,5
+<     @author Neophytos Demetriou (k2pts@yahoo.com)
+<     @cvs-id $Id: search-procs.tcl,v 1.55.2.7 2021/03/02 12:01:31 gustafn Exp $
+---
+>     @author Neophytos Demetriou (neophytos@gmail.com)
+>     @cvs-id $Id: search-procs.tcl,v 1.55.2.8 2022/03/01 09:18:44 gustafn Exp $
+72c72
+<     @see :xo::db::sql::dotlrn_privacy proc guest_p
+---
+>     @see :acs::dc proc "call dotlrn_privacy guest_p"
+102c102
+<     @author Neophytos Demetriou
+---
+>     @author Neophytos Demetriou (neophytos@gmail.com)
+106,117c106,131
+<     set driver [parameter::get \
+<                     -package_id [apm_package_id_from_key search] \
+<                     -parameter FtsEngineDriver]
+< 
+<     if { $driver eq ""
+<          || (![callback::impl_exists -callback search::index -impl $driver] \
+<                  && ! [acs_sc_binding_exists_p FtsEngineDriver $driver])
+<      } {
+<         # Nothing to do if no driver
+<         ns_log Debug "search::indexer: driver=$driver binding exists? " \
+<             "[acs_sc_binding_exists_p FtsEngineDriver $driver]"
+<         return
+---
+>     #set drivers [parameter::get \
+>     #                -package_id [apm_package_id_from_key search] \
+>     #                -parameter FtsEngineDriver]
+> 
+>     set id [db_string -cache_key fts_engine_driver_contract_id get_fts_engine_contract_id "select acs_sc_contract__get_id('FtsEngineDriver')"]
+>     set drivers [db_list -cache_key fts_engine_driver_valid_bindings get_all_fts_valid_bindings {
+> 	select
+>             acs_sc_impl__get_name(b.impl_id) as impl_name
+>         from
+>             acs_sc_bindings b,
+>             acs_sc_impls impl
+>         where
+>             b.contract_id = :id
+>         and impl.impl_id = b.impl_id
+>     }]
+>     ns_log notice "search indexer drivers=$drivers"
+>     foreach driver $drivers {
+> 	    if { $driver eq ""
+> 		 || (![callback::impl_exists -callback search::index -impl $driver] \
+> 			 && ! [acs_sc_binding_exists_p FtsEngineDriver $driver])
+> 	     } {
+> 		# Nothing to do if no driver
+> 		ns_log Debug "search::indexer: driver=$driver binding exists? " \
+> 		    "[acs_sc_binding_exists_p FtsEngineDriver $driver]"
+> 		return
+> 	    }
+167,194c181,211
+<                             if {[callback::impl_exists -callback search::index -impl $driver]} {
+<                                 if {![info exists datasource(package_id)]} {
+<                                     set datasource(package_id) ""
+<                                 }
+< 
+<                                 if {![info exists datasource(relevant_date)]} {
+<                                     set datasource(relevant_date) ""
+<                                 }
+<                                 #ns_log notice "callback invoke search::index"
+<                                 callback -impl $driver search::index \
+<                                     -object_id $object_id \
+<                                     -content $txt \
+<                                     -title $datasource(title) \
+<                                     -keywords $datasource(keywords) \
+<                                     -package_id $datasource(package_id) \
+<                                     -community_id $datasource(community_id) \
+<                                     -relevant_date $datasource(relevant_date) \
+<                                     -datasource datasource
+<                             } else {
+<                                 #ns_log notice "acs_sc::invoke FtsEngineDriver"
+<                                 set r [acs_sc::invoke \
+<                                            -contract FtsEngineDriver \
+<                                            -operation [expr {$event eq "UPDATE" ? "update_index" : "index"}] \
+<                                            -call_args [list $datasource(object_id) \
+<                                                            $txt $datasource(title) \
+<                                                            $datasource(keywords)] \
+<                                            -impl $driver]
+<                             }
+---
+> 			    foreach driver $drivers {
+> 				    ns_log notice "indexing with FtsEngineDriver $driver"
+> 				    if {[callback::impl_exists -callback search::index -impl $driver]} {
+> 					if {![info exists datasource(package_id)]} {
+> 					    set datasource(package_id) ""
+> 					}
+> 
+> 					if {![info exists datasource(relevant_date)]} {
+> 					    set datasource(relevant_date) ""
+> 					}
+> 					#ns_log notice "callback invoke search::index"
+> 					callback -impl $driver search::index \
+> 					    -object_id $object_id \
+> 					    -content $txt \
+> 					    -title $datasource(title) \
+> 					    -keywords $datasource(keywords) \
+> 					    -package_id $datasource(package_id) \
+> 					    -community_id $datasource(community_id) \
+> 					    -relevant_date $datasource(relevant_date) \
+> 					    -datasource datasource
+> 				    } else {
+> 					#ns_log notice "acs_sc::invoke FtsEngineDriver"
+> 					set r [acs_sc::invoke \
+> 						   -contract FtsEngineDriver \
+> 						   -operation [expr {$event eq "UPDATE" ? "update_index" : "index"}] \
+> 						   -call_args [list $datasource(object_id) \
+> 								   $txt $datasource(title) \
+> 								   $datasource(keywords)] \
+> 						   -impl $driver]
+> 				    }
+> 			    }
+218,227c235,249
+<                 if {[catch {
+<                     set r [acs_sc::invoke \
+<                                -contract FtsEngineDriver \
+<                                -operation unindex \
+<                                -call_args [list $object_id] \
+<                                -impl $driver]
+<                 } errMsg]} {
+<                     ns_log Error "search::indexer: error unindexing $object_id " \
+<                         "[acs_object_type $object_id]: $errMsg\n[ad_print_stack_trace]"
+<                 } else {
+---
+> 		set ok 1
+> 		foreach driver $drivers {
+> 			if {[catch {
+> 			    set r [acs_sc::invoke \
+> 				       -contract FtsEngineDriver \
+> 				       -operation unindex \
+> 				       -call_args [list $object_id] \
+> 				       -impl $driver]
+> 			} errMsg]} {
+> 			    ns_log Error "search::indexer: error unindexing $object_id " \
+> 				"[acs_object_type $object_id]: $errMsg\n[ad_print_stack_trace]"
+> 			   set ok 0
+> 			}
+> 		}
+>                 if ($ok) {
+268c290
+<     @author Neophytos Demetriou
+---
+>     @author Neophytos Demetriou (neophytos@gmail.com)
+303c325
+<     @author Neophytos Demetriou
+---
+>     @author Neophytos Demetriou (neophytos@gmail.com)
