@@ -1,285 +1,407 @@
-? tcl/test
-Index: tcl/search-procs.tcl
-===================================================================
-RCS file: /cvsroot/openacs-4/packages/search/tcl/search-procs.tcl,v
-retrieving revision 1.55.2.8
-diff -u -r1.55.2.8 search-procs.tcl
---- tcl/search-procs.tcl	1 Mar 2022 09:18:44 -0000	1.55.2.8
-+++ tcl/search-procs.tcl	2 Aug 2023 08:08:17 -0000
-@@ -1,7 +1,7 @@
- ad_library {
-     full-text search engine
- 
--    @author Neophytos Demetriou (k2pts@yahoo.com)
-+    @author Neophytos Demetriou (neophytos@gmail.com)
-     @cvs-id $Id: search-procs.tcl,v 1.55.2.8 2022/03/01 09:18:44 gustafn Exp $
- }
- 
-@@ -99,22 +99,36 @@
-     table and calls the appropriate driver functions to index, update, or
-     delete the entry.
- 
--    @author Neophytos Demetriou
-+    @author Neophytos Demetriou (neophytos@gmail.com)
-     @author Jeff Davis (davis@xarg.net)
- } {
- 
--    set driver [parameter::get \
--                    -package_id [apm_package_id_from_key search] \
--                    -parameter FtsEngineDriver]
--
--    if { $driver eq ""
--         || (![callback::impl_exists -callback search::index -impl $driver] \
--                 && ! [acs_sc_binding_exists_p FtsEngineDriver $driver])
--     } {
--        # Nothing to do if no driver
--        ns_log Debug "search::indexer: driver=$driver binding exists? " \
--            "[acs_sc_binding_exists_p FtsEngineDriver $driver]"
--        return
-+    #set drivers [parameter::get \
-+    #                -package_id [apm_package_id_from_key search] \
-+    #                -parameter FtsEngineDriver]
-+
-+    set id [db_string -cache_key fts_engine_driver_contract_id get_fts_engine_contract_id "select acs_sc_contract__get_id('FtsEngineDriver')"]
-+    set drivers [db_list -cache_key fts_engine_driver_valid_bindings get_all_fts_valid_bindings {
-+	select
-+            acs_sc_impl__get_name(b.impl_id) as impl_name
-+        from
-+            acs_sc_bindings b,
-+            acs_sc_impls impl
-+        where
-+            b.contract_id = :id
-+        and impl.impl_id = b.impl_id
-+    }]
-+    ns_log notice "search indexer drivers=$drivers"
-+    foreach driver $drivers {
-+	    if { $driver eq ""
-+		 || (![callback::impl_exists -callback search::index -impl $driver] \
-+			 && ! [acs_sc_binding_exists_p FtsEngineDriver $driver])
-+	     } {
-+		# Nothing to do if no driver
-+		ns_log Debug "search::indexer: driver=$driver binding exists? " \
-+		    "[acs_sc_binding_exists_p FtsEngineDriver $driver]"
-+		return
-+	    }
-     }
-     # JCD: pull out the rows all at once so we release the handle
-     foreach row [db_list_of_lists search_observer_queue_entry {}] {
-@@ -164,34 +178,37 @@
-                             search::content_get txt $datasource(content) $datasource(mime) \
-                                 $datasource(storage_type) $object_id
- 
--                            if {[callback::impl_exists -callback search::index -impl $driver]} {
--                                if {![info exists datasource(package_id)]} {
--                                    set datasource(package_id) ""
--                                }
--
--                                if {![info exists datasource(relevant_date)]} {
--                                    set datasource(relevant_date) ""
--                                }
--                                #ns_log notice "callback invoke search::index"
--                                callback -impl $driver search::index \
--                                    -object_id $object_id \
--                                    -content $txt \
--                                    -title $datasource(title) \
--                                    -keywords $datasource(keywords) \
--                                    -package_id $datasource(package_id) \
--                                    -community_id $datasource(community_id) \
--                                    -relevant_date $datasource(relevant_date) \
--                                    -datasource datasource
--                            } else {
--                                #ns_log notice "acs_sc::invoke FtsEngineDriver"
--                                set r [acs_sc::invoke \
--                                           -contract FtsEngineDriver \
--                                           -operation [expr {$event eq "UPDATE" ? "update_index" : "index"}] \
--                                           -call_args [list $datasource(object_id) \
--                                                           $txt $datasource(title) \
--                                                           $datasource(keywords)] \
--                                           -impl $driver]
--                            }
-+			    foreach driver $drivers {
-+				    ns_log notice "indexing with FtsEngineDriver $driver"
-+				    if {[callback::impl_exists -callback search::index -impl $driver]} {
-+					if {![info exists datasource(package_id)]} {
-+					    set datasource(package_id) ""
-+					}
-+
-+					if {![info exists datasource(relevant_date)]} {
-+					    set datasource(relevant_date) ""
-+					}
-+					#ns_log notice "callback invoke search::index"
-+					callback -impl $driver search::index \
-+					    -object_id $object_id \
-+					    -content $txt \
-+					    -title $datasource(title) \
-+					    -keywords $datasource(keywords) \
-+					    -package_id $datasource(package_id) \
-+					    -community_id $datasource(community_id) \
-+					    -relevant_date $datasource(relevant_date) \
-+					    -datasource datasource
-+				    } else {
-+					#ns_log notice "acs_sc::invoke FtsEngineDriver"
-+					set r [acs_sc::invoke \
-+						   -contract FtsEngineDriver \
-+						   -operation [expr {$event eq "UPDATE" ? "update_index" : "index"}] \
-+						   -call_args [list $datasource(object_id) \
-+								   $txt $datasource(title) \
-+								   $datasource(keywords)] \
-+						   -impl $driver]
-+				    }
-+			    }
-                         } errMsg]} {
-                             ns_log Error "search::indexer: error getting datasource for " \
-                                 "$object_id $object_type: $errMsg\n[ad_print_stack_trace]"
-@@ -215,16 +232,21 @@
-                 }
-             }
-             DELETE {
--                if {[catch {
--                    set r [acs_sc::invoke \
--                               -contract FtsEngineDriver \
--                               -operation unindex \
--                               -call_args [list $object_id] \
--                               -impl $driver]
--                } errMsg]} {
--                    ns_log Error "search::indexer: error unindexing $object_id " \
--                        "[acs_object_type $object_id]: $errMsg\n[ad_print_stack_trace]"
--                } else {
-+		set ok 1
-+		foreach driver $drivers {
-+			if {[catch {
-+			    set r [acs_sc::invoke \
-+				       -contract FtsEngineDriver \
-+				       -operation unindex \
-+				       -call_args [list $object_id] \
-+				       -impl $driver]
-+			} errMsg]} {
-+			    ns_log Error "search::indexer: error unindexing $object_id " \
-+				"[acs_object_type $object_id]: $errMsg\n[ad_print_stack_trace]"
-+			   set ok 0
-+			}
-+		}
-+                if ($ok) {
-                     # call the search action callbacks.
-                     callback -catch search::action \
-                         -action $event \
-@@ -265,7 +287,7 @@
-     storage_type
-     object_id
- } {
--    @author Neophytos Demetriou
-+    @author Neophytos Demetriou (neophytos@gmail.com)
- 
-     @param content
- 
-@@ -300,7 +322,7 @@
-     _data
-     mime
- } {
--    @author Neophytos Demetriou
-+    @author Neophytos Demetriou (neophytos@gmail.com)
- } {
-     upvar $_txt txt
-     upvar $_data data
-Index: www/search.adp
-===================================================================
-RCS file: /cvsroot/openacs-4/packages/search/www/search.adp,v
-retrieving revision 1.19
-diff -u -r1.19 search.adp
---- www/search.adp	7 Aug 2017 23:48:29 -0000	1.19
-+++ www/search.adp	2 Aug 2023 08:08:17 -0000
-@@ -58,6 +58,21 @@
-   </div>
- </else>
- 
-+<if @vectorresult:rowcount@ ne 0>
-+  <h3>Related Searches</h3>
-+  <div id="related-searches">
-+    <ul>
-+      <multiple name="vectorresult">
-+        <li>
-+          <a href="@vectorresult.url_one@" class="vector-result-title">
-+            @vectorresult.title;literal@
-+          </a>
-+	</li>
-+      </multiple>
-+    </ul>
-+  </div>
-+</if>
-+
- <include src="/packages/search/lib/navbar" &="q"
-     paginator_class="list-paginator-bottom" count="@result.count;literal@" &="low" &="high"
-     &="offset" &="num" &="search_package_id">
-Index: www/search.tcl
-===================================================================
-RCS file: /cvsroot/openacs-4/packages/search/www/search.tcl,v
-retrieving revision 1.41.2.4
-diff -u -r1.41.2.4 search.tcl
---- www/search.tcl	28 Feb 2022 20:14:25 -0000	1.41.2.4
-+++ www/search.tcl	2 Aug 2023 08:08:17 -0000
-@@ -1,5 +1,5 @@
- ad_page_contract {
--    @author Neophytos Demetriou <k2pts@cytanet.com.cy>
-+    @author Neophytos Demetriou <neophytos@gmail.com>
-     @creation-date September 01, 2001
-     @cvs-id $Id: search.tcl,v 1.41.2.4 2022/02/28 20:14:25 gustafn Exp $
- } {
-@@ -52,6 +52,7 @@
- 
- set user_id [ad_conn user_id]
- set driver [parameter::get -package_id $package_id -parameter FtsEngineDriver]
-+set vector_driver [parameter::get -package_id $package_id -parameter VectorDriver]
- if {[callback::impl_exists -impl $driver -callback search::driver_info]} {
-     array set info [lindex [callback -impl $driver search::driver_info] 0]
-     # array set info [list package_key intermedia-driver version 1 automatic_and_queries_p 1  stopwords_p 1]
-@@ -92,7 +93,7 @@
- #set q [string tolower $q]
- set urlencoded_query [ad_urlencode $q]
- 
--set params [list $q $offset $limit $user_id $df]
-+set params [list $q $offset $limit $user_id $df $dt]
- if {$search_package_id eq ""
-     && [parameter::get -package_id $package_id -parameter SubsiteSearchP -default 1]
-     && [subsite::main_site_id] != [ad_conn subsite_id]
-@@ -130,6 +131,12 @@
-     array set result [acs_sc::invoke -contract FtsEngineDriver -operation search \
- 			  -call_args $params -impl $driver]
- }
-+
-+ns_log notice vector_driver=$vector_driver params=$params
-+array set vector_result [lindex [callback -impl $vector_driver search::search -query $q -offset 0 -limit 10 \
-+				  -user_id $user_id -df $df \
-+				  -extra_args [list package_ids $search_package_id object_type $object_type]] 0]
-+
- set tend [clock clicks -milliseconds]
- 
- if { $t eq [_ search.Feeling_Lucky] && $result(count) > 0} {
-@@ -205,6 +212,28 @@
-     }
- }
- 
-+template::multirow create vectorresult title url_one object_id
-+foreach object_id $vector_result(ids) {
-+    if {[catch {
-+        set object_type [acs_object_type $object_id]
-+        if {[callback::impl_exists -impl $object_type -callback search::datasource]} {
-+            array set datasource [lindex [callback -impl $object_type search::datasource -object_id $object_id] 0]
-+            set url_one [lindex [callback -impl $object_type search::url -object_id $object_id] 0]
-+        } else {
-+            #ns_log warning "SEARCH search/www/search.tcl callback::datasource::$object_type not found"
-+            array set datasource [acs_sc::invoke -contract FtsContentProvider -operation datasource \
-+				      -call_args [list $object_id] -impl $object_type]
-+            set url_one [acs_sc::invoke -contract FtsContentProvider -operation url \
-+			     -call_args [list $object_id] -impl $object_type]
-+	    set title $datasource(title)
-+        }
-+    } errmsg]} {
-+        ns_log error "search.tcl object_id $object_id object_type $object_type error $errmsg"
-+    } else {
-+        template::multirow append vectorresult $title $url_one
-+    }
-+}
-+
- set search_the_web [parameter::get -package_id $package_id -parameter SearchTheWeb]
- if {$search_the_web ne ""} {
-     set stw ""
+Only in /var/www/oacs-5-10-0/packages/search/catalog: CVS
+Only in /var/www/oacs-5-10-0/packages/search/: CVS
+Only in /var/www/oacs-5-10-0/packages/search/lib: CVS
+diff -r ./search.info /var/www/oacs-5-10-0/packages/search/search.info
+12c12
+<     <version name="5.10.0" url="http://openacs.org/repository/download/apm/search-5.10.0.apm">
+---
+>     <version name="5.10.1d1" url="http://openacs.org/repository/download/apm/search-5.10.1d1.apm">
+21c21
+<         <provides url="search" version="5.10.0"/>
+---
+>         <provides url="search" version="5.10.1d1"/>
+23c23
+<         <requires url="acs-tcl" version="5.10.0"/>
+---
+>         <requires url="acs-tcl" version="5.10.1d9"/>
+38a39
+>             <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="VectorDriver"  description="Vector Similarity Search via an FtsEngineDriver implementation. Name the implementation."/>
+Only in /var/www/oacs-5-10-0/packages/search/: search.tcl
+Only in /var/www/oacs-5-10-0/packages/search/sql: CVS
+Only in /var/www/oacs-5-10-0/packages/search/sql/oracle: CVS
+diff -r ./sql/oracle/search-packages-create.sql /var/www/oacs-5-10-0/packages/search/sql/oracle/search-packages-create.sql
+21c21
+< -- @version $Id: search-packages-create.sql,v 1.5.12.2 2021/03/02 08:08:44 gustafn Exp $
+---
+> -- @version $Id: search-packages-create.sql,v 1.5.12.3 2022/02/13 12:10:37 gustafn Exp $
+58,60c58,61
+<     if p_event = 'DELETE' then
+<       select count(*) from acs_objects into l_count
+<       where object_id = p_object_id;
+---
+>     if enqueue.event = 'DELETE' then
+>       select count(*) into l_count
+>       from acs_objects
+>       where object_id = enqueue.object_id;
+Only in /var/www/oacs-5-10-0/packages/search/sql/oracle/upgrade: CVS
+Only in /var/www/oacs-5-10-0/packages/search/sql/postgresql: CVS
+Only in /var/www/oacs-5-10-0/packages/search/sql/postgresql/upgrade: CVS
+Only in /var/www/oacs-5-10-0/packages/search/tcl: CVS
+diff -r ./tcl/extra-args-procs.tcl /var/www/oacs-5-10-0/packages/search/tcl/extra-args-procs.tcl
+10c10
+<     @cvs-id $Id: extra-args-procs.tcl,v 1.2.2.1 2021/02/17 08:20:57 gustafn Exp $
+---
+>     @cvs-id $Id: extra-args-procs.tcl,v 1.2.2.2 2022/01/27 09:23:59 antoniop Exp $
+35c35
+<     return [list from_clause {} where_clause "$object_table_alias.package_id in ([template::util::tcl_to_sql_list $value])"]
+---
+>     return [list from_clause {} where_clause "$object_table_alias.package_id in ([ns_dbquotelist $value])"]
+diff -r ./tcl/search-convert-procs.tcl /var/www/oacs-5-10-0/packages/search/tcl/search-convert-procs.tcl
+7c7
+<     @cvs-id $Id: search-convert-procs.tcl,v 1.5.2.1 2019/05/24 13:45:42 antoniop Exp $
+---
+>     @cvs-id $Id: search-convert-procs.tcl,v 1.5.2.5 2022/06/13 15:30:47 antoniop Exp $
+48a49,53
+>             if {![util::file_content_check -type pdf -file $filename]} {
+>                 ns_log warning "search: $filename ($mime_type) is not a pdf file; skip indexing"
+>                 file delete -- $tmp_filename                
+>                 return ""
+>             }
+59c64,103
+<             set convert_command {unzip -p $filename content.xml >$tmp_filename}
+---
+>             if {![util::file_content_check -type zip -file $filename]} {
+>                 ns_log warning "search: $filename ($mime_type) is not a zip file; skip indexing"
+>                 file delete -- $tmp_filename                
+>                 return ""
+>             }
+>             set convert_command {[util::which unzip] -p $filename content.xml >$tmp_filename}
+>         }
+>         application/vnd.openxmlformats-officedocument.presentationml.presentation {
+>             #
+>             # File claims to be a MS pptx
+>             #
+> 
+>             file delete -- $tmp_filename
+> 
+>             #
+>             # First check that we can unzip the file
+>             #
+>             if {![util::file_content_check -type zip -file $filename]} {
+>                 ns_log warning "search: $filename ($mime_type) is not a zip file; skip indexing"
+>                 return ""
+>             }
+> 
+>             ad_try {
+>                 #
+>                 # Now we extract the markup from all slides...
+>                 #
+>                 set xml [exec -- [util::which unzip] -p $filename ppt/slides/*.xml]
+>                 #
+>                 # ... and clean it up so that only the plain text remains.
+>                 #
+>                 set txt ""
+>                 foreach {m t} [regexp -all -inline {<a:t>([^>]+)</a:t>} $xml] {
+>                     lappend txt $t
+>                 }
+>             } on error {errorMsg} {
+>                 ns_log error "SEARCH: conversion failed - cannot extract text from $filename ($mime_type): $errorMsg"
+>                 return ""
+>             } on ok {d} {
+>                 return [join $txt]
+>             }
+62,67c106,111
+< 	    file delete -- $tmp_filename
+< 	    #
+< 	    # Reading the whole content into memory is not necessarily
+< 	    # the best when dealing with huge files. However, for
+< 	    # html-files this is probably ok.
+< 	    #
+---
+>             file delete -- $tmp_filename
+>             #
+>             # Reading the whole content into memory is not necessarily
+>             # the best when dealing with huge files. However, for
+>             # html-files this is probably ok.
+>             #
+71,77c115,143
+< 	    file delete -- $tmp_filename
+< 	    #
+< 	    # Reading the whole content into memory is not necessarily
+< 	    # the best when dealing with huge files. However, for
+< 	    # txt-files this is probably ok.
+< 	    #
+< 	    return [template::util::read_file $filename]
+---
+>             file delete -- $tmp_filename
+>             #
+>             # Don't trust blindly the extension and try to use the
+>             # unix "file" command to get more info.
+>             #
+>             set file_command [::util::which file]
+>             if {$file_command ne ""} {
+>                 set result [exec -ignorestderr $file_command --mime-type $filename]
+>                 set mime_type [lindex $result 1]
+>                 #
+>                 # Maybe, we are too restrictve by the following test,
+>                 # but let us be conservative first.
+>                 #
+>                 if {$mime_type ne "text/plain"} {
+>                     #
+>                     # The available file is not what it preteneds to
+>                     # be. We could try further to extract content, but
+>                     # we give simply up here.
+>                     #
+>                     ns_log notice "search-convert: not a plain text file $result"
+>                     return ""
+>                 }
+>             }
+>             #
+>             # Reading the whole content into memory is not necessarily
+>             # the best when dealing with huge files. However, for
+>             # txt-files this is probably ok.
+>             #
+>             return [template::util::read_file $filename]
+diff -r ./tcl/search-procs.tcl /var/www/oacs-5-10-0/packages/search/tcl/search-procs.tcl
+4,5c4,5
+<     @author Neophytos Demetriou (k2pts@yahoo.com)
+<     @cvs-id $Id: search-procs.tcl,v 1.55.2.7 2021/03/02 12:01:31 gustafn Exp $
+---
+>     @author Neophytos Demetriou (neophytos@gmail.com)
+>     @cvs-id $Id: search-procs.tcl,v 1.55.2.8 2022/03/01 09:18:44 gustafn Exp $
+72c72
+<     @see :xo::db::sql::dotlrn_privacy proc guest_p
+---
+>     @see :acs::dc proc "call dotlrn_privacy guest_p"
+102c102
+<     @author Neophytos Demetriou
+---
+>     @author Neophytos Demetriou (neophytos@gmail.com)
+106,117c106,131
+<     set driver [parameter::get \
+<                     -package_id [apm_package_id_from_key search] \
+<                     -parameter FtsEngineDriver]
+< 
+<     if { $driver eq ""
+<          || (![callback::impl_exists -callback search::index -impl $driver] \
+<                  && ! [acs_sc_binding_exists_p FtsEngineDriver $driver])
+<      } {
+<         # Nothing to do if no driver
+<         ns_log Debug "search::indexer: driver=$driver binding exists? " \
+<             "[acs_sc_binding_exists_p FtsEngineDriver $driver]"
+<         return
+---
+>     #set drivers [parameter::get \
+>     #                -package_id [apm_package_id_from_key search] \
+>     #                -parameter FtsEngineDriver]
+> 
+>     set id [db_string -cache_key fts_engine_driver_contract_id get_fts_engine_contract_id "select acs_sc_contract__get_id('FtsEngineDriver')"]
+>     set drivers [db_list -cache_key fts_engine_driver_valid_bindings get_all_fts_valid_bindings {
+> 	select
+>             acs_sc_impl__get_name(b.impl_id) as impl_name
+>         from
+>             acs_sc_bindings b,
+>             acs_sc_impls impl
+>         where
+>             b.contract_id = :id
+>         and impl.impl_id = b.impl_id
+>     }]
+>     ns_log notice "search indexer drivers=$drivers"
+>     foreach driver $drivers {
+> 	    if { $driver eq ""
+> 		 || (![callback::impl_exists -callback search::index -impl $driver] \
+> 			 && ! [acs_sc_binding_exists_p FtsEngineDriver $driver])
+> 	     } {
+> 		# Nothing to do if no driver
+> 		ns_log Debug "search::indexer: driver=$driver binding exists? " \
+> 		    "[acs_sc_binding_exists_p FtsEngineDriver $driver]"
+> 		return
+> 	    }
+167,194c181,211
+<                             if {[callback::impl_exists -callback search::index -impl $driver]} {
+<                                 if {![info exists datasource(package_id)]} {
+<                                     set datasource(package_id) ""
+<                                 }
+< 
+<                                 if {![info exists datasource(relevant_date)]} {
+<                                     set datasource(relevant_date) ""
+<                                 }
+<                                 #ns_log notice "callback invoke search::index"
+<                                 callback -impl $driver search::index \
+<                                     -object_id $object_id \
+<                                     -content $txt \
+<                                     -title $datasource(title) \
+<                                     -keywords $datasource(keywords) \
+<                                     -package_id $datasource(package_id) \
+<                                     -community_id $datasource(community_id) \
+<                                     -relevant_date $datasource(relevant_date) \
+<                                     -datasource datasource
+<                             } else {
+<                                 #ns_log notice "acs_sc::invoke FtsEngineDriver"
+<                                 set r [acs_sc::invoke \
+<                                            -contract FtsEngineDriver \
+<                                            -operation [expr {$event eq "UPDATE" ? "update_index" : "index"}] \
+<                                            -call_args [list $datasource(object_id) \
+<                                                            $txt $datasource(title) \
+<                                                            $datasource(keywords)] \
+<                                            -impl $driver]
+<                             }
+---
+> 			    foreach driver $drivers {
+> 				    ns_log notice "indexing with FtsEngineDriver $driver"
+> 				    if {[callback::impl_exists -callback search::index -impl $driver]} {
+> 					if {![info exists datasource(package_id)]} {
+> 					    set datasource(package_id) ""
+> 					}
+> 
+> 					if {![info exists datasource(relevant_date)]} {
+> 					    set datasource(relevant_date) ""
+> 					}
+> 					#ns_log notice "callback invoke search::index"
+> 					callback -impl $driver search::index \
+> 					    -object_id $object_id \
+> 					    -content $txt \
+> 					    -title $datasource(title) \
+> 					    -keywords $datasource(keywords) \
+> 					    -package_id $datasource(package_id) \
+> 					    -community_id $datasource(community_id) \
+> 					    -relevant_date $datasource(relevant_date) \
+> 					    -datasource datasource
+> 				    } else {
+> 					#ns_log notice "acs_sc::invoke FtsEngineDriver"
+> 					set r [acs_sc::invoke \
+> 						   -contract FtsEngineDriver \
+> 						   -operation [expr {$event eq "UPDATE" ? "update_index" : "index"}] \
+> 						   -call_args [list $datasource(object_id) \
+> 								   $txt $datasource(title) \
+> 								   $datasource(keywords)] \
+> 						   -impl $driver]
+> 				    }
+> 			    }
+218,227c235,249
+<                 if {[catch {
+<                     set r [acs_sc::invoke \
+<                                -contract FtsEngineDriver \
+<                                -operation unindex \
+<                                -call_args [list $object_id] \
+<                                -impl $driver]
+<                 } errMsg]} {
+<                     ns_log Error "search::indexer: error unindexing $object_id " \
+<                         "[acs_object_type $object_id]: $errMsg\n[ad_print_stack_trace]"
+<                 } else {
+---
+> 		set ok 1
+> 		foreach driver $drivers {
+> 			if {[catch {
+> 			    set r [acs_sc::invoke \
+> 				       -contract FtsEngineDriver \
+> 				       -operation unindex \
+> 				       -call_args [list $object_id] \
+> 				       -impl $driver]
+> 			} errMsg]} {
+> 			    ns_log Error "search::indexer: error unindexing $object_id " \
+> 				"[acs_object_type $object_id]: $errMsg\n[ad_print_stack_trace]"
+> 			   set ok 0
+> 			}
+> 		}
+>                 if ($ok) {
+268c290
+<     @author Neophytos Demetriou
+---
+>     @author Neophytos Demetriou (neophytos@gmail.com)
+303c325
+<     @author Neophytos Demetriou
+---
+>     @author Neophytos Demetriou (neophytos@gmail.com)
+diff -r ./tcl/syndicate-procs.tcl /var/www/oacs-5-10-0/packages/search/tcl/syndicate-procs.tcl
+5c5
+<     @cvs-id $Id: syndicate-procs.tcl,v 1.4.2.1 2021/03/01 18:01:00 gustafn Exp $
+---
+>     @cvs-id $Id: syndicate-procs.tcl,v 1.4.2.4 2022/06/13 14:11:28 antoniop Exp $
+48c48
+<    set xmlMap [list & "&amp;" < "&lt;" > "&gt;" \" "&quot;" ' "&apos;"]
+---
+>         set xmlMap [list & "&amp;" < "&lt;" > "&gt;" \" "&quot;" ' "&apos;"]
+60a61,77
+> 
+>         #
+>         # Null character is forbidden in a database bind variable. We
+>         # replace it with the empty string when found.
+>         #
+>         set sanitized 0
+>         incr sanitized [regsub -all \x00 $rss_xml_frag {} rss_xml_frag]
+>         incr sanitized [regsub -all \x00 $body {} body]
+>         #
+>         # If we had to sanitize the content, we complain in the server
+>         # log: probably one of the binary-to-text conversion is broken
+>         # or needs to be revised.
+>         #
+>         if {$sanitized > 0} {
+>             ad_log warning "Attempt to introduce forbidden characters in the syndication table by object ${object_id}"
+>         }
+> 
+Only in /var/www/oacs-5-10-0/packages/search/tcl: test
+Only in /var/www/oacs-5-10-0/packages/search/www: CVS
+Only in /var/www/oacs-5-10-0/packages/search/www/doc: CVS
+Only in /var/www/oacs-5-10-0/packages/search/www/help: CVS
+Only in /var/www/oacs-5-10-0/packages/search/www/resources: CVS
+diff -r ./www/search.adp /var/www/oacs-5-10-0/packages/search/www/search.adp
+60a61,75
+> <if @vectorresult:rowcount@ ne 0>
+>   <h3>Related Searches</h3>
+>   <div id="related-searches">
+>     <ul>
+>       <multiple name="vectorresult">
+>         <li>
+>           <a href="@vectorresult.url_one@" class="vector-result-title">
+>             @vectorresult.title;literal@
+>           </a>
+> 	</li>
+>       </multiple>
+>     </ul>
+>   </div>
+> </if>
+> 
+diff -r ./www/search.tcl /var/www/oacs-5-10-0/packages/search/www/search.tcl
+2c2
+<     @author Neophytos Demetriou <k2pts@cytanet.com.cy>
+---
+>     @author Neophytos Demetriou <neophytos@gmail.com>
+4c4
+<     @cvs-id $Id: search.tcl,v 1.41.2.3 2021/04/22 18:50:00 gustafn Exp $
+---
+>     @cvs-id $Id: search.tcl,v 1.41.2.4 2022/02/28 20:14:25 gustafn Exp $
+12c12
+<     {search_package_id:naturalnum ""}
+---
+>     {search_package_id:naturalnum,object_id ""}
+54a55
+> set vector_driver [parameter::get -package_id $package_id -parameter VectorDriver]
+57c58
+< #    array set info [list package_key intermedia-driver version 1 automatic_and_queries_p 1  stopwords_p 1]
+---
+>     # array set info [list package_key intermedia-driver version 1 automatic_and_queries_p 1  stopwords_p 1]
+95c96
+< set params [list $q $offset $limit $user_id $df]
+---
+> set params [list $q $offset $limit $user_id $df $dt]
+132a134,139
+> 
+> ns_log notice vector_driver=$vector_driver params=$params
+> array set vector_result [lindex [callback -impl $vector_driver search::search -query $q -offset 0 -limit 10 \
+> 				  -user_id $user_id -df $df \
+> 				  -extra_args [list package_ids $search_package_id object_type $object_type]] 0]
+> 
+204a212,233
+>     }
+> }
+> 
+> template::multirow create vectorresult title url_one object_id
+> foreach object_id $vector_result(ids) {
+>     if {[catch {
+>         set object_type [acs_object_type $object_id]
+>         if {[callback::impl_exists -impl $object_type -callback search::datasource]} {
+>             array set datasource [lindex [callback -impl $object_type search::datasource -object_id $object_id] 0]
+>             set url_one [lindex [callback -impl $object_type search::url -object_id $object_id] 0]
+>         } else {
+>             #ns_log warning "SEARCH search/www/search.tcl callback::datasource::$object_type not found"
+>             array set datasource [acs_sc::invoke -contract FtsContentProvider -operation datasource \
+> 				      -call_args [list $object_id] -impl $object_type]
+>             set url_one [acs_sc::invoke -contract FtsContentProvider -operation url \
+> 			     -call_args [list $object_id] -impl $object_type]
+> 	    set title $datasource(title)
+>         }
+>     } errmsg]} {
+>         ns_log error "search.tcl object_id $object_id object_type $object_type error $errmsg"
+>     } else {
+>         template::multirow append vectorresult $title $url_one
