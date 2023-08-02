@@ -75,7 +75,7 @@ RUN cd /var/www/oacs-5-10-0/ && \
     mv openacs-packages/pgembedding-driver ./packages/ && \
     mv openacs-packages/sample-2fa ./packages/ && \
     mv openacs-packages/maps ./packages/ && \
-    cd openacs-4/packages/search && \
+    cd packages/search && \
     patch -p0 < ../../../openacs-packages/search.patch && \
     cd ../xowiki && \
     patch -p0 < ../../../openacs-packages/xowiki.patch
