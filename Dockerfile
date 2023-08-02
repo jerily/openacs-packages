@@ -79,11 +79,8 @@ RUN cd /var/www/oacs-5-10-0/ && \
     mv ./openacs-packages/pgembedding-driver ./packages/ && \
     mv ./openacs-packages/sample-2fa ./packages/ && \
     mv ./openacs-packages/maps ./packages/ && \
-    rm -rf ./packages/search && \
-    cd packages && \
-    wget -O search-2023-08-02.tar.gz "https://openacs.org/storage/download/search-2023-08-02.tar.gz?file_id=5742287" && \
-    tar xzvf search-2023-08-02.tar.gz && \
-    rm search-2023-08-02.tar.gz && \
+    cd ./packages/search && \
+    patch -p0 < /var/www/oacs-5-10-0/openacs-packages/search-stable.patch && \
     cd ../xowiki && \
     patch -p0 < /var/www/oacs-5-10-0/openacs-packages/xowiki.patch
 
