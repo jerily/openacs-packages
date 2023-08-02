@@ -56,8 +56,6 @@ RUN echo "14 main postgres" > ~postgres/.postgresqlrc && \
     chown postgres ~postgres/.postgresqlrc && \
     ls -la ~postgres/.postgresqlrc
 
-RUN echo hello
-
 RUN cd /usr/local/src && \
     git clone https://github.com/gustafn/install-ns && \
     cd install-ns && \
