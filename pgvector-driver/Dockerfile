@@ -71,10 +71,10 @@ RUN cd /var/www/oacs-5-10-0/ && \
     git clone https://github.com/jerily/openacs-packages.git && \
     ls -la && \
     patch -p0 /usr/local/ns/config-oacs-5-10-0.tcl ./openacs-packages/config.patch && \
-    mv openacs-packages/pgvector-driver ./openacs-4/packages/ && \
-    mv openacs-packages/pgembedding-driver ./openacs-4/packages/ && \
-    mv openacs-packages/sample-2fa ./openacs-4/packages/ && \
-    mv openacs-packages/maps ./openacs-4/packages/ && \
+    mv openacs-packages/pgvector-driver ./packages/ && \
+    mv openacs-packages/pgembedding-driver ./packages/ && \
+    mv openacs-packages/sample-2fa ./packages/ && \
+    mv openacs-packages/maps ./packages/ && \
     cd openacs-4/packages/search && \
     patch -p0 < ../../../openacs-packages/search.patch && \
     cd ../xowiki && \
