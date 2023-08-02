@@ -60,6 +60,7 @@ RUN cd /usr/local/src && \
     git clone https://github.com/gustafn/install-ns && \
     cd install-ns && \
     sed -i.orig s/^oacs_tar_release_url=$/\#oacs_tar_release_url=/g install-oacs.sh && \
+    sed -i.orig2 s/oacs_tar_release=openacs-5.10.0/oacs_tar_release=openacs-full-5.10.0/g install-oacs.sh && \
     version_ns=4.99.25 version_tcl=8.6.13 bash install-ns.sh && \
     version_ns=4.99.25 version_tcl=8.6.13 bash install-ns.sh build && \
     /etc/init.d/postgresql start && \
