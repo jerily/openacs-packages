@@ -1,20 +1,135 @@
 ? tcl/test
+Index: tcl/search-convert-procs.tcl
+===================================================================
+RCS file: /cvsroot/openacs-4/packages/search/tcl/search-convert-procs.tcl,v
+retrieving revision 1.5.2.8
+diff -u -r1.5.2.8 search-convert-procs.tcl
+--- tcl/search-convert-procs.tcl	16 Mar 2023 12:38:04 -0000	1.5.2.8
++++ tcl/search-convert-procs.tcl	2 Aug 2023 08:19:12 -0000
+@@ -4,7 +4,7 @@
+ 
+     @author Dirk Gomez <openacs@dirkgomez.de>
+     @creation-date 2005-06-25
+-    @cvs-id $Id: search-convert-procs.tcl,v 1.5.2.8 2023/03/16 12:38:04 antoniop Exp $
++    @cvs-id $Id: search-convert-procs.tcl,v 1.5.2.5 2022/06/13 15:30:47 antoniop Exp $
+ }
+ 
+ 
+@@ -32,7 +32,7 @@
+     set tmp_filename [ad_tmpnam]
+     set result ""
+ 
+-    switch -glob $mime_type {
++    switch $mime_type {
+         application/msword -
+         application/vnd.ms-word {
+             set convert_command {catdoc $filename >$tmp_filename}
+@@ -48,7 +48,7 @@
+         application/pdf {
+             if {![util::file_content_check -type pdf -file $filename]} {
+                 ns_log warning "search: $filename ($mime_type) is not a pdf file; skip indexing"
+-                file delete -- $tmp_filename
++                file delete -- $tmp_filename                
+                 return ""
+             }
+             set convert_command {pdftotext $filename $tmp_filename}
+@@ -63,50 +63,16 @@
+         application/vnd.oasis.opendocument.spreadsheet-template {
+             if {![util::file_content_check -type zip -file $filename]} {
+                 ns_log warning "search: $filename ($mime_type) is not a zip file; skip indexing"
+-                file delete -- $tmp_filename
++                file delete -- $tmp_filename                
+                 return ""
+             }
+             set convert_command {[util::which unzip] -p $filename content.xml >$tmp_filename}
+         }
+-        application/vnd.openxmlformats-officedocument.* {
++        application/vnd.openxmlformats-officedocument.presentationml.presentation {
+             #
+-            # File claims to be a MS Office Open XML Format
+-            #
+-            # Similar to ODF, these files are in fact a zip archive
+-            # containing a directory structure that describes the
+-            # document. The text content we are looking for is located
+-            # in a specific path for every document type, but the
+-            # principle is always the same: unzip the xml location
+-            # from the archive and return it stripped of any markup.
++            # File claims to be a MS pptx
+             #
+ 
+-            switch $mime_type {
+-                application/vnd.openxmlformats-officedocument.presentationml.presentation {
+-                    #
+-                    # PowerPoint .pptx
+-                    #
+-                    set xml_path ppt/slides/*.xml
+-                }
+-                application/vnd.openxmlformats-officedocument.spreadsheetml.sheet {
+-                    #
+-                    # Excel .xlsx
+-                    #
+-                    set xml_path xl/sharedStrings.xml
+-                }
+-                application/vnd.openxmlformats-officedocument.wordprocessingml.document {
+-                    #
+-                    # Word .docx
+-                    #
+-                    set xml_path word/document.xml
+-                }
+-                default {
+-                    #
+-                    # We do not support this file, exit.
+-                    #
+-                    return ""
+-                }
+-            }
+-
+             file delete -- $tmp_filename
+ 
+             #
+@@ -119,16 +85,21 @@
+ 
+             ad_try {
+                 #
+-                # Extract the markup...
++                # Now we extract the markup from all slides...
+                 #
+-                set xml [exec -- [util::which unzip] -p $filename $xml_path]
++                set xml [exec -- [util::which unzip] -p $filename ppt/slides/*.xml]
+                 #
+                 # ... and clean it up so that only the plain text remains.
+                 #
+-                return [string trim [ns_striphtml $xml]]
++                set txt ""
++                foreach {m t} [regexp -all -inline {<a:t>([^>]+)</a:t>} $xml] {
++                    lappend txt $t
++                }
+             } on error {errorMsg} {
+                 ns_log error "SEARCH: conversion failed - cannot extract text from $filename ($mime_type): $errorMsg"
+                 return ""
++            } on ok {d} {
++                return [join $txt]
+             }
+         }
+         text/html {
 Index: tcl/search-procs.tcl
 ===================================================================
 RCS file: /cvsroot/openacs-4/packages/search/tcl/search-procs.tcl,v
-retrieving revision 1.55.2.8
-diff -u -r1.55.2.8 search-procs.tcl
---- tcl/search-procs.tcl	1 Mar 2022 09:18:44 -0000	1.55.2.8
-+++ tcl/search-procs.tcl	2 Aug 2023 08:08:17 -0000
-@@ -1,7 +1,7 @@
+retrieving revision 1.55.2.10
+diff -u -r1.55.2.10 search-procs.tcl
+--- tcl/search-procs.tcl	9 Mar 2023 13:39:17 -0000	1.55.2.10
++++ tcl/search-procs.tcl	2 Aug 2023 08:19:12 -0000
+@@ -1,8 +1,8 @@
  ad_library {
      full-text search engine
  
 -    @author Neophytos Demetriou (k2pts@yahoo.com)
+-    @cvs-id $Id: search-procs.tcl,v 1.55.2.10 2023/03/09 13:39:17 antoniop Exp $
 +    @author Neophytos Demetriou (neophytos@gmail.com)
-     @cvs-id $Id: search-procs.tcl,v 1.55.2.8 2022/03/01 09:18:44 gustafn Exp $
++    @cvs-id $Id: search-procs.tcl,v 1.55.2.8 2022/03/01 09:18:44 gustafn Exp $
  }
  
+ namespace eval search {}
 @@ -99,22 +99,36 @@
      table and calls the appropriate driver functions to index, update, or
      delete the entry.
@@ -181,13 +296,32 @@ diff -u -r1.55.2.8 search-procs.tcl
  } {
      upvar $_txt txt
      upvar $_data data
+@@ -320,7 +342,8 @@
+         # Write content to a file and let the filter below extract the
+         # words for the index from the file.
+         #
+-        set f [ad_opentmpfile tmp_filename]
++        set tmp_filename [ad_tmpnam]
++        set f [open $tmp_filename w]
+         puts $f $data
+         close $f
+         set data $tmp_filename
+@@ -433,7 +456,7 @@
+ namespace eval search::dotlrn {}
+ 
+ ad_proc -public search::dotlrn::get_community_id {
+-    -package_id:required
++    -package_id
+ } {
+     If dotlrn is installed find the package's community_id
+ 
 Index: www/search.adp
 ===================================================================
 RCS file: /cvsroot/openacs-4/packages/search/www/search.adp,v
 retrieving revision 1.19
 diff -u -r1.19 search.adp
 --- www/search.adp	7 Aug 2017 23:48:29 -0000	1.19
-+++ www/search.adp	2 Aug 2023 08:08:17 -0000
++++ www/search.adp	2 Aug 2023 08:19:12 -0000
 @@ -58,6 +58,21 @@
    </div>
  </else>
@@ -216,7 +350,7 @@ RCS file: /cvsroot/openacs-4/packages/search/www/search.tcl,v
 retrieving revision 1.41.2.4
 diff -u -r1.41.2.4 search.tcl
 --- www/search.tcl	28 Feb 2022 20:14:25 -0000	1.41.2.4
-+++ www/search.tcl	2 Aug 2023 08:08:17 -0000
++++ www/search.tcl	2 Aug 2023 08:19:12 -0000
 @@ -1,5 +1,5 @@
  ad_page_contract {
 -    @author Neophytos Demetriou <k2pts@cytanet.com.cy>
@@ -283,3 +417,50 @@ diff -u -r1.41.2.4 search.tcl
  set search_the_web [parameter::get -package_id $package_id -parameter SearchTheWeb]
  if {$search_the_web ne ""} {
      set stw ""
+Index: www/doc/guidelines.adp
+===================================================================
+RCS file: /cvsroot/openacs-4/packages/search/www/doc/guidelines.adp,v
+retrieving revision 1.3.2.2
+diff -u -r1.3.2.2 guidelines.adp
+--- www/doc/guidelines.adp	13 Jul 2023 12:45:46 -0000	1.3.2.2
++++ www/doc/guidelines.adp	2 Aug 2023 08:19:12 -0000
+@@ -35,7 +35,8 @@
+ writing concrete functions that follow the specification. For
+ example, the implementation of <code>datasource</code> for the
+ object type <code>note</code>, looks like this:
+-<pre><code>ad_proc notes__datasource {
++<pre><code>
++ad_proc notes__datasource {
+     object_id
+ } {
+     \@author Neophytos Demetriou
+@@ -60,7 +61,8 @@
+ file which associates the implementation with a contract name. The
+ implementation of <code>FtsContentProvider</code> for the object
+ type <code>note</code> looks like:
+-<pre><code>select acs_sc_impl__new(
++<pre><code>
++select acs_sc_impl__new(
+            'FtsContentProvider',                -- impl_contract_name
+            'note',                              -- impl_name
+            'notes'                              -- impl_owner_name
+@@ -73,7 +75,8 @@
+ <code>FtsContentProvider</code> and your concrete functions.
+ Here&#39;s how an association between an operation and a concrete
+ function looks like:
+-<pre><code>select acs_sc_impl_alias__new(
++<pre><code>
++select acs_sc_impl_alias__new(
+            'FtsContentProvider',                -- impl_contract_name
+            'note',                              -- impl_name
+            'datasource',                        -- impl_operation_name
+@@ -93,7 +96,8 @@
+ We do this by adding triggers on the table that stores the content
+ items of your object type. Here&#39;s how that part looks like for
+ <code>note</code>.
+-<pre><code>create function notes__itrg ()
++<pre><code>
++create function notes__itrg ()
+ returns opaque as $$
+ begin
+     perform search_observer__enqueue(new.note_id,'INSERT');
