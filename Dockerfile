@@ -59,8 +59,8 @@ RUN echo "14 main postgres" > ~postgres/.postgresqlrc && \
 RUN cd /usr/local/src && \
     git clone https://github.com/gustafn/install-ns && \
     cd install-ns && \
-    bash install-ns.sh && \
-    bash install-ns.sh build && \
+    version_ns=4.99.25 version_tcl=8.6.13 bash install-ns.sh && \
+    version_ns=4.99.25 version_tcl=8.6.13 bash install-ns.sh build && \
     /etc/init.d/postgresql start && \
     pg_lsclusters && \ 
     bash install-oacs.sh && \
