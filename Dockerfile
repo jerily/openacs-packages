@@ -119,7 +119,8 @@ RUN git clone --branch v0.4.4 https://github.com/pgvector/pgvector.git && \
     make && \
     make install
 
-RUN git clone https://github.com/neondatabase/pg_embedding.git && \
+RUN wget -O pg_embedding.tar.gz "https://openacs.org/storage/download/pg_embedding-2023-08-02.tar.gz?file_id=5742269" && \
+    tar -xzvf pg_embedding.tar.gz && \
     cd pg_embedding && \
     make && \
     make install  
