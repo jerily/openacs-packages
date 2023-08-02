@@ -58,6 +58,7 @@ RUN echo "14 main postgres" > ~postgres/.postgresqlrc && \
 
 RUN cd /usr/local/src && \
     git clone https://github.com/gustafn/install-ns && \
+    sed -i.orig s/^oacs_tar_release_url=$/\#oacs_tar_release_url=/g install-oacs.sh && \
     cd install-ns && \
     version_ns=4.99.25 version_tcl=8.6.13 bash install-ns.sh && \
     version_ns=4.99.25 version_tcl=8.6.13 bash install-ns.sh build && \
