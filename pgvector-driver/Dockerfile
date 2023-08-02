@@ -69,7 +69,6 @@ RUN cd /usr/local/src && \
     bash install-oacs.sh build
 
 RUN cd /var/www/oacs-5-10-0/ && \
-    rm -rf openacs-packages && \
     git clone https://github.com/jerily/openacs-packages.git && \
     ls -la && \
     patch -p0 /usr/local/ns/config-oacs-5-10-0.tcl ./openacs-packages/config.patch && \
@@ -78,9 +77,9 @@ RUN cd /var/www/oacs-5-10-0/ && \
     mv ./openacs-packages/sample-2fa ./packages/ && \
     mv ./openacs-packages/maps ./packages/ && \
     cd ./packages/search && \
-    patch -p0 < /var/www/oacs-5-10-0/openacs-packages/search-stable.patch && \
+    patch -p0 < ../../../openacs-packages/search-stable.patch && \
     cd ../xowiki && \
-    patch -p0 < /var/www/oacs-5-10-0/openacs-packages/xowiki.patch
+    patch -p0 < ../../../openacs-packages/xowiki.patch
 
 RUN echo hello
 
