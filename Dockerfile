@@ -79,7 +79,7 @@ RUN cd /var/www/oacs-5-10-0/ && \
     cd ../xowiki && \
     patch -p0 < ../../../openacs-packages/xowiki.patch
 
-RUN echo hello
+RUN sed -i 's/127.0.0.1/0.0.0.0/g' /usr/local/ns/config-oacs-5-10-0.tcl
 
 RUN git clone --recurse-submodules https://github.com/jerily/tbert.git
 

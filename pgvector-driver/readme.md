@@ -14,7 +14,10 @@ make install
 ## Try it out using docker
 ```
 docker build . -t pgvector-driver:latest
+# On Linux
 docker run --network host pgvector-driver:latest
+# On Mac/Windows (thanks Adrian Ferenc and Dr. Yuen):
+docker run -d -p 8000:8000 pgvector-driver:latest
 ```
 
 ## Use with naviserver

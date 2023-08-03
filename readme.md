@@ -5,7 +5,10 @@
 git clone https://github.com/jerily/openacs-packages.git
 cd openacs-packages
 docker build . -t neo-openacs-packages:latest
+# On Linux
 docker run --network host neo-openacs-packages:latest
+# On Mac/Windows (thanks Adrian Ferenc and Dr. Yuen):
+docker run -d -p 8000:8000 pgvector-driver:latest
 
 # Once you run the last command, 
 # you can point your browser to http://localhost:8000/
