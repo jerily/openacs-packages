@@ -55,7 +55,6 @@ make install
 # install pg_embedding postgresql extension
 git clone https://github.com/neondatabase/pg_embedding.git
 cd pg_embedding
-git apply ../openacs-packages/pgembedding-driver/pg_embedding.patch
 make
 make install 
 ```
