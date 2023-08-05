@@ -95,8 +95,15 @@ RUN cd tbert && \
     mkdir /var/www/oacs-5-10-0/models && \
     cp -R all-MiniLM-L12-v2 /var/www/oacs-5-10-0/models
 
-RUN cd tbert && mkdir build && cd build && \
+RUN cd tbert/bert.cpp && mkdir build && cd build && \
     cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DNAVISERVER=/usr/local/ns && \
+    make && \
+    make install
+
+RUN cd tbert && \
+    mkdir build && \
+    cd build && \
+    cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release && \
     make && \
     make install
 
