@@ -95,15 +95,14 @@ RUN cd tbert && \
     mkdir /var/www/oacs-5-10-0/models && \
     cp -R all-MiniLM-L12-v2 /var/www/oacs-5-10-0/models
 
+# Build and install the dependencies of tbert
 RUN cd tbert/bert.cpp && mkdir build && cd build && \
-    cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DNAVISERVER=/usr/local/ns && \
+    cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release && \
     make && \
     make install
 
+# Install naviserver module
 RUN cd tbert && \
-    mkdir build && \
-    cd build && \
-    cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release && \
     make && \
     make install
 
