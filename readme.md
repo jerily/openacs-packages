@@ -19,16 +19,23 @@ password: test
 ```
  
 ## Installation Instuctions
-```
-# install vector embeddings naviserver module (BERT models)
-git clone --recurse-submodules https://github.com/jerily/tbert.git
-cd tbert && mkdir build && cd build
+```bash
+# Build and install the dependencies of tbert
+git clone --recurse-submodules git@github.com:jerily/tbert.git
+cd tbert
+TBERT_DIR=$(pwd)
+cd ${TBERT_DIR}/bert.cpp
+mkdir build
+cd build
 cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
 make
 make install
-cd ..
+
+# Build tbert NaviServer module
+cd ${TBERT_DIR}
 make
 make install
+
 
 # install multi-factor authentication naviserver module
 git clone --recurse-submodules https://github.com/jerily/tmfa.git
